@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PocketStatistician</string>
+    <string name="statistics_editor_name">Название статистики</string>
+    <string name="statistics_editor_count">Количество переменных</string>
+    <string name="ok">Ок</string>
+    <string name="variable">Переменная</string>
+    <string name="new_statistics_activity_name">New Statistics Activity</string>
+</resources>
