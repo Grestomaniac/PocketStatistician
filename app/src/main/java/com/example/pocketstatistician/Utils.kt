@@ -1,7 +1,12 @@
 package com.example.pocketstatistician
 
-fun isInteger(str: String?): Boolean {
+import android.content.Context
+import android.widget.Toast
+import java.security.AccessControlContext
+
+fun isInteger(str: String?, context: Context): Boolean {
     if (str == null) {
+        Toast.makeText(context, R.string.empty_string, Toast.LENGTH_SHORT).show()
         return false
     }
     val length = str.length
@@ -12,6 +17,7 @@ fun isInteger(str: String?): Boolean {
     while (i < length) {
         val c = str[i]
         if (c < '0' || c > '9') {
+            Toast.makeText(context, R.string.not_int, Toast.LENGTH_SHORT).show()
             return false
         }
         i++

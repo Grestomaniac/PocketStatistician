@@ -4,5 +4,9 @@
     <string name="statistics_editor_count">Количество переменных</string>
     <string name="ok">Ок</string>
     <string name="variable">Переменная</string>
+
+    <string name="empty_string">Вы ввели пустую строку</string>
+    <string name="not_int">Это не число</string>
+
     <string name="new_statistics_activity_name">New Statistics Activity</string>
 </resources>

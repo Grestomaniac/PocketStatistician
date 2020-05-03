@@ -19,11 +19,10 @@ class ListOfValuesAdapter(private val data: ArrayList<String>): RecyclerView.Ada
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = data[position]
+        holder.textView.hint = data[position]
     }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.textView)
-
     }
 }
