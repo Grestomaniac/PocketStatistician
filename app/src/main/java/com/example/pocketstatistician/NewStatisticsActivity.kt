@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.new_statistics_layout.*
 
@@ -30,6 +31,10 @@ class NewStatisticsActivity: AppCompatActivity() {
             variables.add("${getString(R.string.variable)} $i")
         }
 
+        val adapter = ListOfValuesAdapter(variables)
+
+        list_of_variables.adapter = adapter
+        list_of_variables.layoutManager = LinearLayoutManager(this)
 
     }
 }
