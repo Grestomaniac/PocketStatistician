@@ -38,9 +38,5 @@ class NewStatisticsActivity: AppCompatActivity() {
         list_of_variables.adapter = adapter
         list_of_variables.layoutManager = LinearLayoutManager(this)
 
-        val textViewAdapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, variables)
-
-        textView.setAdapter(textViewAdapter)
-
     }
 }
