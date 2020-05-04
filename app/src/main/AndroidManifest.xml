@@ -27,7 +27,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=
                     "com.example.pocketstatistician.MainActivity" />
-    </activity>
+        </activity>
+
+        <activity android:name="com.example.pocketstatistician.NewTypeActivity"
+            android:label = "@string/new_type_activity_name">
+        </activity>
 
     </application>
 </manifest>

@@ -5,11 +5,12 @@
     android:layout_height="wrap_content"
     android:padding="6dp">
 
-    <AutoCompleteTextView
+    <EditText
         android:hint="@string/variable"
-        android:id="@+id/textView"
+        android:id="@+id/drop_down_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/global_style" />
+        style="@style/global_style"
+        />
 
 </LinearLayout>

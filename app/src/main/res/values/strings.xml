@@ -9,4 +9,5 @@
     <string name="not_int">Это не число</string>
 
     <string name="new_statistics_activity_name">New Statistics Activity</string>
+    <string name="new_type_activity_name">New Type Activity</string>
 </resources>

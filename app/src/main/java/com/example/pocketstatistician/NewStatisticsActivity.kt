@@ -13,10 +13,14 @@ import kotlinx.android.synthetic.main.value_item.*
 
 class NewStatisticsActivity: AppCompatActivity() {
 
+    private lateinit var dropDownMenu: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.new_statistics_layout)
+
+        dropDownMenu = RecyclerView(this)
 
         val listOfVariables = findViewById<RecyclerView>(R.id.list_of_variables)
 
@@ -33,7 +37,7 @@ class NewStatisticsActivity: AppCompatActivity() {
             variables.add("${getString(R.string.variable)} ${i+1}")
         }
 
-        val adapter = ListOfValuesAdapter(variables)
+        val adapter = ListOfValuesAdapter(variables, dropDownMenu)
 
         list_of_variables.adapter = adapter
         list_of_variables.layoutManager = LinearLayoutManager(this)
