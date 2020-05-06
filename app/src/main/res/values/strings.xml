@@ -7,7 +7,12 @@
 
     <string name="empty_string">Вы ввели пустую строку</string>
     <string name="not_int">Это не число</string>
+    <string name="not_enough_variables">Для создания статистики необходимо как минимум два переменных</string>
+    <string name="to_variables_editor">Создать переменные</string>
+    <string name="to_main_activity">К главному меню</string>
 
     <string name="new_statistics_activity_name">New Statistics Activity</string>
     <string name="new_type_activity_name">New Type Activity</string>
+
+
 </resources>

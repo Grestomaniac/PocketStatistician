@@ -5,8 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="6dp">
 
-    <EditText
-        android:hint="@string/variable"
+    <AutoCompleteTextView
         android:id="@+id/drop_down_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

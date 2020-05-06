@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import io.realm.RealmList
+import io.realm.RealmObject
 
 class MainActivity: AppCompatActivity(){
 
@@ -26,14 +28,15 @@ class MainActivity: AppCompatActivity(){
 
 }
 
-open class Variables {
-    var name: String = ""
-    var type: Int = 0
-    var variants: ArrayList<String> = ArrayList()
-}
+open class Variables(
+    var name: String = "",
+    var type: Int = 0,
+    var value: Double = .0,
+    var variants: RealmList<String> = RealmList()
+): RealmObject()
 
-open class Statistic {
-    var name: String = ""
-    var variables_count: Int = 0
-    var variables: ArrayList<Variables> = ArrayList()
-}
+open class Statistic(
+    var name: String = "",
+    var variablesCount: Int = 0,
+    var variables: RealmList<Variables> = RealmList()
+): RealmObject()

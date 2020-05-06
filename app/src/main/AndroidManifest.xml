@@ -29,7 +29,7 @@
                     "com.example.pocketstatistician.MainActivity" />
         </activity>
 
-        <activity android:name="com.example.pocketstatistician.NewTypeActivity"
+        <activity android:name="com.example.pocketstatistician.NewVariableActivity"
             android:label = "@string/new_type_activity_name">
         </activity>
 
