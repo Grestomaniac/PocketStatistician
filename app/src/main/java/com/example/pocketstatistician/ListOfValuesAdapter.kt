@@ -4,17 +4,16 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import io.realm.RealmList
 
-class ListOfValuesAdapter(private val count: Int, private val adapter: ArrayAdapter<String>, private val context: Context): RecyclerView.Adapter<ListOfValuesAdapter.ViewHolder>() {
+class ListOfValuesAdapter(private val count: Int, private val context: Context): RecyclerView.Adapter<ListOfValuesAdapter.ViewHolder>() {
 
     private val TAG = this.javaClass.simpleName
+    var onEntryClickListener: OnEntryClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.value_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.just_text_view, parent, false)
         return ViewHolder(view)
     }
 
@@ -23,11 +22,21 @@ class ListOfValuesAdapter(private val count: Int, private val adapter: ArrayAdap
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.autoCompleteTextView.setAdapter(adapter)
-        holder.autoCompleteTextView.hint = "${context.getString(R.string.variable)} ${position + 1}"
+        holder.textView.text = context.getString(R.string.variable, position)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val autoCompleteTextView = (view.findViewById(R.id.drop_down_editText) as AutoCompleteTextView)
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+        init {
+            view.setOnClickListener(this)
+        }
+        val textView = (view.findViewById(R.id.recycler_text_view) as TextView)
+
+        override fun onClick(v: View?) {
+            onEntryClickListener?.onEntryClick(v!!, layoutPosition)
+        }
+    }
+
+    interface OnEntryClickListener {
+        fun onEntryClick(view: View, position: Int)
     }
 }

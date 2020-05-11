@@ -2,12 +2,11 @@ package com.example.pocketstatistician
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmResults
@@ -22,37 +21,50 @@ class NewStatisticsActivity: AppCompatActivity() {
 
         setContentView(R.layout.new_statistics_layout)
 
-        val listOfVariables = findViewById<RecyclerView>(R.id.list_of_variables)
-
-        val okCountButton = findViewById<Button>(R.id.ok_count_button)
-
         variablesCount = findViewById(R.id.variables_count)
     }
 
     fun onCountButtonClick(view: View) {
-        lateinit var variables: RealmResults<Variables>
-        Realm.getDefaultInstance().executeTransaction { realm ->
-            val varsFromRealm = realm.where(Variables::class.java).findAll()
-            if (varsFromRealm.size < 2) {
-                NoVariablesAlertDialog(this).show(supportFragmentManager, "No Variables Alert Dialog")
-            }
-            else {
-                variables = varsFromRealm
-            }
+        val variablesFromRealm = loadVariables()
+
+        if (variablesFromRealm == null) {
+            NoVariablesAlertDialog(this).show(supportFragmentManager, "No Variables Alert Dialog")
+            return
         }
 
         val count = variablesCount.text.toString()
         if (!isInteger(count, this)) return
 
-        val variableNames = variables.mapTo(RealmList(), { variable ->
+        val variableNames = variablesFromRealm.mapTo(RealmList(), { variable ->
             variable.name
         })
-        val variableNamesAdapter = ArrayAdapter<String>(this, R.layout.dropdown_menu_item, variableNames)
 
-        val adapter = ListOfValuesAdapter(count.toInt(), variableNamesAdapter, this)
+        val adapter = ListOfValuesAdapter(count.toInt(), this)
+
+        adapter.onEntryClickListener = object: ListOfValuesAdapter.OnEntryClickListener {
+            override fun onEntryClick(view: View, position: Int) {
+                SearchDialog(variableNames, this@NewStatisticsActivity, view as TextView).show()
+            }
+        }
 
         list_of_variables.adapter = adapter
+        list_of_variables.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         list_of_variables.layoutManager = LinearLayoutManager(this)
+
+    }
+
+    private fun loadVariables(): RealmResults<Variable>? {
+        var variables: RealmResults<Variable>? = null
+        Realm.getDefaultInstance().executeTransaction { realm ->
+            val varsFromRealm = realm.where(Variable::class.java).findAll()
+            if (varsFromRealm.size > 1) {
+                variables = varsFromRealm
+            }
+        }
+        return variables
+    }
+
+    private fun onSaveButtonClick() {
 
     }
 }

@@ -1,18 +1,46 @@
 <resources>
     <string name="app_name">PocketStatistician</string>
+
+    <!--NewStatistic editor-->
     <string name="statistics_editor_name">Название статистики</string>
     <string name="statistics_editor_count">Количество переменных</string>
-    <string name="ok">Ок</string>
-    <string name="variable">Переменная</string>
+    <string name="variable">Переменная %1$d</string>
+    <string name="not_chosen">Переменная не выбрана</string>
 
+    <!--NewVariable editor-->
+    <string name="variable_name">Название переменной</string>
+    <string name="variable_type">Тип переменной</string>
+    <string name="variants_count">Количество вариантов</string>
+    <string name="variant">Вариант</string>
+    
+    <string-array name="variable_types">
+        <item>Регрессионный</item>
+        <item>Классификационный</item>
+    </string-array>
+
+    <!--Dialog strings-->
     <string name="empty_string">Вы ввели пустую строку</string>
     <string name="not_int">Это не число</string>
     <string name="not_enough_variables">Для создания статистики необходимо как минимум два переменных</string>
     <string name="to_variables_editor">Создать переменные</string>
     <string name="to_main_activity">К главному меню</string>
+    <string name="you_chose">Вы выбрали:</string>
+    <string name="nothing_is_chosen">Вы ничего не выбрали</string>
 
+    <!--Activities-->
     <string name="new_statistics_activity_name">New Statistics Activity</string>
     <string name="new_type_activity_name">New Type Activity</string>
+
+    <!--Buttons-->
+    <string name="ok">Ок</string>
+    <string name="save">Сохранить</string>
+    <string name="back">Назад</string>
+    <string name="type_variants">Введите варианты</string>
+    <string name="data_is_not_correct">Неправильно введены данные</string>
+    <string name="search_items">Выберите переменную</string>
+    <string name="close">Закрыть</string>
+    <string name="add_new_variable">Добавить...</string>
+    <string name="type">Тип</string>
 
 
 </resources>

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -31,6 +32,14 @@ fun isInteger(str: String?, context: Context): Boolean {
     return true
 }
 
+fun show(where: Context, what: String) {
+    Toast.makeText(where, what, Toast.LENGTH_SHORT).show()
+}
+
+fun log(input: String) {
+    Log.d("Abrakadabra", input)
+}
+
 class NoVariablesAlertDialog(context: Context): DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context!!)
@@ -40,7 +49,7 @@ class NoVariablesAlertDialog(context: Context): DialogFragment() {
                 val intent = Intent(context, NewVariableActivity::class.java)
                 startActivity(intent)
             }
-            .setNegativeButton(R.string.to_variables_editor
+            .setNegativeButton(R.string.to_main_activity
             ) { dialog, which ->
                 val intent = Intent(context, MainActivity::class.java)
                 startActivity(intent)
