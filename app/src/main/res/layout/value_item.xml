@@ -10,11 +10,10 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="50"
-        style="@style/global_style"
         android:gravity="center" />
 
     <TextView
-        android:id="@+id/chosen_variable"
+        android:id="@+id/variable_type"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="50"

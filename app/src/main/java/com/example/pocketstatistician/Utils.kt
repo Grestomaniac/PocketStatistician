@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import io.realm.RealmResults
 import java.security.AccessControlContext
 
 fun isInteger(str: String?, context: Context): Boolean {
@@ -38,6 +39,15 @@ fun show(where: Context, what: String) {
 
 fun log(input: String) {
     Log.d("Abrakadabra", input)
+}
+
+fun findElementByName(list: RealmResults<Variable>?, name: String): Variable? {
+    if (list == null) return null
+    for (i in 0 until list.size) {
+        if (list[i]!!.equals(name))
+            return list[i]
+    }
+    return null
 }
 
 class NoVariablesAlertDialog(context: Context): DialogFragment() {

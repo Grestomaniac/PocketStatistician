@@ -10,11 +10,15 @@ open class Variable(
     var name: String = "",
     var type: Int = 0,
     var variants: RealmList<String> = RealmList()
-): RealmObject()
+): RealmObject() {
+    override fun equals(other: Any?): Boolean {
+        return (this.name == (other as String))
+    }
+}
 
 open class Statistic(
     @PrimaryKey @Required
     var name: String = "",
-    var variablesCount: Int = 0,
-    var variables: RealmList<Variable> = RealmList()
+    var variable_names: RealmList<String> = RealmList(),
+    var variable_types: RealmList<Variable> = RealmList()
 ): RealmObject()

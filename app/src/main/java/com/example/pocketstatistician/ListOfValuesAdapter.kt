@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -13,7 +14,7 @@ class ListOfValuesAdapter(private val count: Int, private val context: Context):
     var onEntryClickListener: OnEntryClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.just_text_view, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.value_item, parent, false)
         return ViewHolder(view)
     }
 
@@ -22,14 +23,16 @@ class ListOfValuesAdapter(private val count: Int, private val context: Context):
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = context.getString(R.string.variable, position)
+        holder.variableName.hint = context.getString(R.string.variable, position)
+        holder.variableType.text = context.getString(R.string.nothing_is_chosen)
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+        val variableName = (view.findViewById(R.id.variable_name) as EditText)
+        val variableType = (view.findViewById(R.id.variable_type) as TextView)
         init {
-            view.setOnClickListener(this)
+            variableType.setOnClickListener(this)
         }
-        val textView = (view.findViewById(R.id.recycler_text_view) as TextView)
 
         override fun onClick(v: View?) {
             onEntryClickListener?.onEntryClick(v!!, layoutPosition)
