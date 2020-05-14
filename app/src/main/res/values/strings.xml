@@ -6,6 +6,7 @@
     <string name="statistics_editor_count">Количество переменных</string>
     <string name="variable">Переменная %1$d</string>
     <string name="not_chosen">Переменная не выбрана</string>
+    <string name="name_is_not_unique">Статистика с таким именем уже существует</string>
 
     <!--NewVariable editor-->
     <string name="variable_name">Название переменной</string>

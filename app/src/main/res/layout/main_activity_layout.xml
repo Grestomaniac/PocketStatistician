@@ -4,18 +4,18 @@
     android:layout_height="match_parent"
     android:weightSum="100">
     
-    <LinearLayout
+    <TabHost
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10">
-    </LinearLayout>
+    </TabHost>
 
-    <GridLayout
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="80"
-        android:layout_margin="20dp">
-    </GridLayout>
+        android:layout_weight="80">
+    </androidx.viewpager.widget.ViewPager>
 
     <RelativeLayout
         android:layout_width="match_parent"

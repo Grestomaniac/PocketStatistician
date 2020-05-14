@@ -10,8 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.example.pocketstatistician.MainActivity"
-            android:label = "Main Activity">
+        <activity android:name="com.example.pocketstatistician.activities.MainActivity"
+            android:label = "Main Activity"
+            android:windowSoftInputMode="adjustPan">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,22 +21,24 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.example.pocketstatistician.NewStatisticsActivity"
+        <activity android:name="com.example.pocketstatistician.activities.NewStatisticsFragment"
             android:label = "@string/new_statistics_activity_name"
-            android:parentActivityName="com.example.pocketstatistician.MainActivity">
+            android:parentActivityName="com.example.pocketstatistician.activities.MainActivity"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=
-                    "com.example.pocketstatistician.MainActivity" />
+                    "com.example.pocketstatistician.activities.MainActivity" />
         </activity>
 
-        <activity android:name="com.example.pocketstatistician.NewVariableActivity"
+        <activity android:name="com.example.pocketstatistician.activities.NewVariableFragment"
             android:label = "@string/new_type_activity_name"
-            android:parentActivityName="com.example.pocketstatistician.MainActivity">
+            android:parentActivityName="com.example.pocketstatistician.activities.MainActivity"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=
-                    "com.example.pocketstatistician.MainActivity" />
+                    "com.example.pocketstatistician.activities.MainActivity" />
         </activity>
 
     </application>

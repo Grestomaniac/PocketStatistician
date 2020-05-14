@@ -12,7 +12,7 @@ open class Variable(
     var variants: RealmList<String> = RealmList()
 ): RealmObject() {
     override fun equals(other: Any?): Boolean {
-        return (this.name == (other as String))
+        return (this.name.equals(other as String))
     }
 }
 

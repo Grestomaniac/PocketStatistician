@@ -1,13 +1,10 @@
-package com.example.pocketstatistician
+package com.example.pocketstatistician.convenience
 
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -17,6 +14,9 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pocketstatistician.R
+import com.example.pocketstatistician.activities.NewVariableFragment
+import com.example.pocketstatistician.adapters.SearchDialogAdapter
 import io.realm.RealmList
 
 class SearchDialog(items: RealmList<String>, private val context: Context,
@@ -36,7 +36,8 @@ class SearchDialog(items: RealmList<String>, private val context: Context,
 
         recView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
-        val adapter = SearchDialogAdapter(items)
+        val adapter =
+            SearchDialogAdapter(items)
         adapter.onEntryClickListener = object : SearchDialogAdapter.OnEntryClickListener {
             override fun onEntryClick(view: View, position: Int) {
                 val selectedViewText = view.findViewById<TextView>(R.id.recycler_text_view).text
@@ -77,14 +78,17 @@ class SearchDialog(items: RealmList<String>, private val context: Context,
 
     private fun openVariableEditor() {
         alertDialog.dismiss()
-        val intent = Intent(context, NewVariableActivity::class.java)
+        val intent = Intent(context, NewVariableFragment::class.java)
         context.startActivity(intent)
         (context as AppCompatActivity).finish()
     }
 
     private fun okButtonPressed() {
         if (chosenView.text.isBlank()) {
-            show(context, context.getString(R.string.nothing_is_chosen))
+            show(
+                context,
+                context.getString(R.string.nothing_is_chosen)
+            )
             return
         }
         chosenVariable.text = chosenView.text

@@ -1,4 +1,4 @@
-package com.example.pocketstatistician
+package com.example.pocketstatistician.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pocketstatistician.R
 
 class ListOfValuesAdapter(private val count: Int, private val context: Context): RecyclerView.Adapter<ListOfValuesAdapter.ViewHolder>() {
 

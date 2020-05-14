@@ -2,22 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="100">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
-        android:gravity="end"
-        android:padding="10dp">
-
-
-    </RelativeLayout>
+    android:weightSum="100"
+    android:id="@+id/new_statistic_fragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="80"
+        android:layout_weight="90"
         android:layout_margin="20dp"
         android:orientation="vertical">
 
@@ -57,7 +48,6 @@
                 android:layout_weight="20"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:onClick="onCountButtonClick"
                 android:text="@string/ok"/>
 
         </LinearLayout>

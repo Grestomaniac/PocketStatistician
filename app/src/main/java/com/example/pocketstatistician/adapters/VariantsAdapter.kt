@@ -1,15 +1,18 @@
-package com.example.pocketstatistician
+package com.example.pocketstatistician.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pocketstatistician.R
 
 class VariantsAdapter(private val count: Int): RecyclerView.Adapter<VariantsAdapter.VariantsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VariantsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.variant_layout, parent, false)
-        return VariantsViewHolder(view)
+        return VariantsViewHolder(
+            view
+        )
     }
 
     override fun getItemCount(): Int {
