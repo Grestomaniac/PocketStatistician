@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.activities.NewVariableFragment
-import com.example.pocketstatistician.adapters.SearchDialogAdapter
+import com.example.pocketstatistician.adapters.SearchAdapter
 import io.realm.RealmList
 
 class SearchDialog(items: RealmList<String>, private val context: Context,
@@ -36,9 +36,8 @@ class SearchDialog(items: RealmList<String>, private val context: Context,
 
         recView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
 
-        val adapter =
-            SearchDialogAdapter(items)
-        adapter.onEntryClickListener = object : SearchDialogAdapter.OnEntryClickListener {
+        val adapter = SearchAdapter(items)
+        adapter.onEntryClickListener = object : SearchAdapter.OnEntryClickListener {
             override fun onEntryClick(view: View, position: Int) {
                 val selectedViewText = view.findViewById<TextView>(R.id.recycler_text_view).text
                 chosenView.text = selectedViewText

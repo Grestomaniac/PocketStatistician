@@ -19,16 +19,10 @@ import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmResults
 
-class NewStatisticsFragment: Fragment() {
+class NewStatisticsFragment(id: Long, val variableList: RealmResults<Variable>,
+                            val statisticList: RealmResults<Statistic>): FragmentWithId(id) {
 
     private lateinit var variablesCount: EditText
-    private val variableList: RealmResults<Variable>
-    private val statisticsList: RealmResults<Statistic>
-
-    init {
-        variableList = loadVariables()
-        statisticsList = loadStatistics()
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.new_statistics_layout, container, false)
@@ -38,7 +32,6 @@ class NewStatisticsFragment: Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         variablesCount = view!!.findViewById(R.id.variables_count)
-
 
         view!!.findViewById<Button>(R.id.createStatistics).setOnClickListener { onSaveButtonClick() }
         view!!.findViewById<Button>(R.id.ok_count_button).setOnClickListener { onCountButtonClick() }
@@ -74,31 +67,13 @@ class NewStatisticsFragment: Fragment() {
 
     }
 
-    private fun loadVariables(): RealmResults<Variable> {
-        var variables: RealmResults<Variable>? = null
-        Realm.getDefaultInstance().executeTransaction { realm ->
-            val varsFromRealm = realm.where(Variable::class.java).findAll()
-            variables = varsFromRealm
-        }
-        return variables!!
-    }
-
-    private fun loadStatistics(): RealmResults<Statistic> {
-        var statistics: RealmResults<Statistic>? = null
-        Realm.getDefaultInstance().executeTransaction { realm ->
-            val dataFromRealm = realm.where(Statistic::class.java).findAll()
-            statistics = dataFromRealm
-        }
-        return statistics!!
-    }
-
     private fun onSaveButtonClick() {
         val statisticName = view!!.findViewById<EditText>(R.id.name_statistics).text.toString()
         if (statisticName.isBlank()) {
             show(activity!!, "Введите название статистики")
             return
         }
-        if (!hasUniqueName(statisticName, statisticsList.mapTo(RealmList(),
+        if (!hasUniqueName(statisticName, statisticList.mapTo(RealmList(),
             { statistic -> statistic.name }))) {
             show(activity!!, "Такое название уже есть")
             return

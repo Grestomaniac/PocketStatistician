@@ -42,6 +42,8 @@
     <string name="close">Закрыть</string>
     <string name="add_new_variable">Добавить...</string>
     <string name="type">Тип</string>
+    <string name="create_new_statistics">Новая статистика</string>
+    <string name="create_new_type">Новый тип</string>
 
 
 </resources>

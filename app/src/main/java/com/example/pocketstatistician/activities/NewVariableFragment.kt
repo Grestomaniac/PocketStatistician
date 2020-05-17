@@ -15,11 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Variable
 import com.example.pocketstatistician.adapters.VariantsAdapter
+import com.example.pocketstatistician.convenience.FragmentWithId
 import com.example.pocketstatistician.convenience.isInteger
 import io.realm.Realm
 import io.realm.RealmList
 
-class NewVariableFragment: Fragment() {
+class NewVariableFragment(id: Long): FragmentWithId(id) {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.new_variables_layout, container, false)
@@ -46,7 +47,7 @@ class NewVariableFragment: Fragment() {
         }
 
         view!!.findViewById<Button>(R.id.ok_count_button).setOnClickListener { onCountButtonClick() }
-        view!!.findViewById<Button>(R.id.createStatistics).setOnClickListener { onSaveButtonClick() }
+        view!!.findViewById<Button>(R.id.createVariable).setOnClickListener { onSaveButtonClick() }
     }
 
 

@@ -9,8 +9,8 @@ import com.example.pocketstatistician.R
 import io.realm.RealmList
 import java.util.*
 
-class SearchDialogAdapter(private val defaultDataList: RealmList<String>)
-                          : RecyclerView.Adapter<SearchDialogAdapter.SearchDialogViewHolder>() {
+class SearchAdapter(private val defaultDataList: RealmList<String>)
+                          : RecyclerView.Adapter<SearchAdapter.SearchDialogViewHolder>() {
 
     private val dataList: RealmList<String> = RealmList()
     var onEntryClickListener: OnEntryClickListener? = null
