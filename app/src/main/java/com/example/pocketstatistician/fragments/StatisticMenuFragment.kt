@@ -34,7 +34,7 @@ class StatisticMenuFragment(id: Long, private val statistic: Statistic): Fragmen
     private fun onAddButtonClick() {
         log("0")
         val addNoteFragment = AddNoteFragment(mainActivity.getNextId(), statistic)
-        mainActivity.changeFragment(addNoteFragment, id)
+        mainActivity.addFragmentToTab(addNoteFragment)
     }
 
     private fun onTableButtonClick() {

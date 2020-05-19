@@ -56,12 +56,12 @@ class ExplorerFragment(id: Long, var typeId: Int): FragmentWithId(id) {
                     0 ->  {
                         val index = variableList.indexOfFirst { it.name == text }
                         val menuFragment = TypeMenuFragment(mainActivity.getNextId(), variableList[index]!!)
-                        mainActivity.changeFragment(menuFragment, id)
+                        mainActivity.addFragmentToTab(menuFragment)
                     }
                     else -> {
                         val index = statisticList.indexOfFirst { it.name == text }
                         val menuFragment = StatisticMenuFragment(mainActivity.getNextId(), statisticList[index]!!)
-                        mainActivity.changeFragment(menuFragment, id)
+                        mainActivity.addFragmentToTab(menuFragment)
                     }
                 }
 

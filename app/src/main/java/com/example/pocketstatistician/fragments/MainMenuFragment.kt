@@ -28,7 +28,7 @@ class MainMenuFragment(id: Long): FragmentWithId(id) {
     }
 
     private fun changeFragment(fragment: FragmentWithId) {
-        mainActivity.changeFragment(fragment, id)
+        mainActivity.addFragmentToTab(fragment)
     }
 
 
