@@ -11,7 +11,6 @@ import com.example.pocketstatistician.R
 
 class ListOfValuesAdapter(private val count: Int, private val context: Context): RecyclerView.Adapter<ListOfValuesAdapter.ViewHolder>() {
 
-    private val TAG = this.javaClass.simpleName
     var onEntryClickListener: OnEntryClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -1,18 +1,11 @@
 package com.example.pocketstatistician.convenience
 
-import android.app.Dialog
 import android.content.Context
-import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.example.pocketstatistician.R
-import com.example.pocketstatistician.Variable
-import com.example.pocketstatistician.activities.MainActivity
-import com.example.pocketstatistician.activities.NewVariableFragment
+import com.example.pocketstatistician.Type
 import io.realm.RealmResults
 
 fun isInteger(str: String?, context: Context): Boolean {
@@ -46,16 +39,7 @@ fun log(input: String) {
     Log.d("Abrakadabra", input)
 }
 
-fun findElementByName(list: RealmResults<Variable>?, name: String): Variable? {
-    if (list == null) return null
-    for (i in 0 until list.size) {
-        if (list[i]!!.equals(name))
-            return list[i]
-    }
-    return null
-}
-
-class NoVariablesAlertDialog(): DialogFragment() {
+/*class NoVariablesAlertDialog(): DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage(R.string.not_enough_variables)
@@ -74,6 +58,6 @@ class NoVariablesAlertDialog(): DialogFragment() {
 
         return builder.create()
     }
-}
+}*/
 
 abstract class FragmentWithId(val id: Long): Fragment()

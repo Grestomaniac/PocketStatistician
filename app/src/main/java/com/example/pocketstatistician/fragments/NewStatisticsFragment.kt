@@ -1,4 +1,4 @@
-package com.example.pocketstatistician.activities
+package com.example.pocketstatistician.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,17 +17,23 @@ import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmResults
 
-class NewStatisticsFragment(id: Long, val variableList: RealmResults<Variable>,
-                            val statisticList: RealmResults<Statistic>): FragmentWithId(id) {
+class NewStatisticsFragment(id: Long): FragmentWithId(id) {
 
     private lateinit var variablesCount: EditText
+    private lateinit var mainActivity: MainActivity
+    private lateinit var statisticList: RealmResults<Statistic>
+    private lateinit var variableList: RealmResults<Type>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.new_statistics_layout, container, false)
+        return inflater.inflate(R.layout.new_statistic_layout, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?)  {
         super.onActivityCreated(savedInstanceState)
+
+        mainActivity = activity as MainActivity
+        statisticList = mainActivity.statisticsList
+        variableList = mainActivity.variableList
 
         variablesCount = view!!.findViewById(R.id.variables_count)
 
@@ -38,10 +42,6 @@ class NewStatisticsFragment(id: Long, val variableList: RealmResults<Variable>,
     }
 
     private fun onCountButtonClick() {
-        if (variableList.size == 0) {
-            NoVariablesAlertDialog().show(activity!!.supportFragmentManager, "No Variables Alert Dialog")
-            return
-        }
 
         val count = variablesCount.text.toString()
         if (!isInteger(count, activity!!)) return
@@ -85,7 +85,7 @@ class NewStatisticsFragment(id: Long, val variableList: RealmResults<Variable>,
             show(activity!!, "Переменные ещё не созданы")
         }
         val variableNames = RealmList<String>()
-        val variableTypes = RealmList<Variable>()
+        val variableTypes = RealmList<Type>()
 
         for (i in 0 until variableRecView.childCount) {
             val viewHolder = variableRecView.findViewHolderForAdapterPosition(i) as ListOfValuesAdapter.ViewHolder
@@ -99,12 +99,14 @@ class NewStatisticsFragment(id: Long, val variableList: RealmResults<Variable>,
                 return
             }
 
-            if (variableType.equals(getString(R.string.nothing_is_chosen))) {
+            if (variableType == getString(R.string.nothing_is_chosen)) {
                 show(activity!!, getString(R.string.not_chosen))
                 return
             }
-            else
-                variableTypes.add(findElementByName(variableList, viewHolder.variableType.text.toString()))
+            else {
+                val variable = variableList.find { it.name == viewHolder.variableType.text.toString() }
+                variableTypes.add(variable)
+            }
         }
 
         Realm.getDefaultInstance().executeTransaction { realm ->
@@ -120,10 +122,6 @@ class NewStatisticsFragment(id: Long, val variableList: RealmResults<Variable>,
     }
 
     private fun hasUniqueName(name: String, listOfNames: RealmList<String>): Boolean {
-        for (item in listOfNames) {
-            if (item == name) return false
-        }
-
-        return true
+        return !listOfNames.contains(name)
     }
 }

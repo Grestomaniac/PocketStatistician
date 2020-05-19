@@ -40,10 +40,16 @@
     <string name="data_is_not_correct">Неправильно введены данные</string>
     <string name="search_items">Выберите переменную</string>
     <string name="close">Закрыть</string>
-    <string name="add_new_variable">Добавить...</string>
+    <string name="add_new_variable">Добавить…</string>
     <string name="type">Тип</string>
     <string name="create_new_statistics">Новая статистика</string>
     <string name="create_new_type">Новый тип</string>
+    <string name="add_note">Добавить запись</string>
+    <string name="open_as_table">Открыть как таблицу</string>
+    <string name="analyze">Проанализировать</string>
+    <string name="delete">Удалить</string>
+    <string name="edit">Редактировать</string>
+    <string name="explorer">Проводник</string>
 
 
 </resources>

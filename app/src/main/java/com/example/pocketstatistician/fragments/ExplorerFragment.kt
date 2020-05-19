@@ -1,4 +1,4 @@
-package com.example.pocketstatistician.activities
+package com.example.pocketstatistician.fragments
 
 import android.graphics.Color
 import android.os.Bundle
@@ -10,21 +10,24 @@ import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pocketstatistician.MainActivity
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
-import com.example.pocketstatistician.Variable
+import com.example.pocketstatistician.Type
 import com.example.pocketstatistician.adapters.SearchAdapter
 import com.example.pocketstatistician.convenience.FragmentWithId
 import io.realm.RealmList
 import io.realm.RealmResults
 
-class ExplorerFragment(id: Long, private val variableList: RealmResults<Variable>,
-                       private val statisticList: RealmResults<Statistic>, var typeId: Int): FragmentWithId(id) {
+class ExplorerFragment(id: Long, var typeId: Int): FragmentWithId(id) {
 
     lateinit var searchBox: EditText
     lateinit var listOfNames: RealmList<String>
+    private lateinit var variableList: RealmResults<Type>
+    private lateinit var statisticList: RealmResults<Statistic>
 
     private var selected: View? = null
+    lateinit var mainActivity: MainActivity
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.explorer_layout, container, false)
@@ -33,24 +36,35 @@ class ExplorerFragment(id: Long, private val variableList: RealmResults<Variable
     override fun onActivityCreated(savedInstanceState: Bundle?)  {
         super.onActivityCreated(savedInstanceState)
 
+        mainActivity = activity as MainActivity
+        variableList = mainActivity.variableList
+        statisticList = mainActivity.statisticsList
+
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.statistic_data)
         searchBox = view!!.findViewById(R.id.searchBox)
 
-        if (typeId == 0) {
-            listOfNames = variableList.mapTo(RealmList(), { it.name })
-        }
-        else listOfNames = statisticList.mapTo(RealmList(), { it.name })
+        listOfNames = if (typeId == 0) {
+            variableList.mapTo(RealmList(), { it.name })
+        } else statisticList.mapTo(RealmList(), { it.name })
 
         val adapter = SearchAdapter(listOfNames)
 
         adapter.onEntryClickListener = object : SearchAdapter.OnEntryClickListener {
             override fun onEntryClick(view: View, position: Int) {
-                val selectedViewText = view.findViewById<TextView>(R.id.recycler_text_view).text
+                val text = (view as TextView).text.toString()
+                when (typeId) {
+                    0 ->  {
+                        val index = variableList.indexOfFirst { it.name == text }
+                        val menuFragment = TypeMenuFragment(mainActivity.getNextId(), variableList[index]!!)
+                        mainActivity.changeFragment(menuFragment, id)
+                    }
+                    else -> {
+                        val index = statisticList.indexOfFirst { it.name == text }
+                        val menuFragment = StatisticMenuFragment(mainActivity.getNextId(), statisticList[index]!!)
+                        mainActivity.changeFragment(menuFragment, id)
+                    }
+                }
 
-                selected?.setBackgroundColor(Color.WHITE)
-
-                selected = view
-                selected?.setBackgroundColor(Color.LTGRAY)
             }
         }
 

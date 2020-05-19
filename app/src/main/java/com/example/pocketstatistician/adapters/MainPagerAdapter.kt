@@ -1,17 +1,11 @@
 package com.example.pocketstatistician.adapters
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.pocketstatistician.activities.MainActivity
-import com.example.pocketstatistician.activities.MainMenuFragment
-import com.example.pocketstatistician.activities.NewStatisticsFragment
-import com.example.pocketstatistician.activities.NewVariableFragment
+import com.example.pocketstatistician.MainActivity
 import com.example.pocketstatistician.convenience.FragmentWithId
 
-class MainPagerAdapter(val fragmentActivity: MainActivity): FragmentStateAdapter(fragmentActivity) {
-
-    private var nextId = 1L
+class MainPagerAdapter(fragmentActivity: MainActivity): FragmentStateAdapter(fragmentActivity) {
 
     val fragmentList = ArrayList<FragmentWithId>()
 
@@ -31,16 +25,15 @@ class MainPagerAdapter(val fragmentActivity: MainActivity): FragmentStateAdapter
         return fragmentList[position].id
     }
 
-    fun addFragment(string: String) {
-        val fragment = resolveFragmentByName(string)
+    fun addFragment(fragment: FragmentWithId) {
         fragmentList.add(fragment)
         notifyItemInserted(fragmentList.lastIndex)
     }
 
-    fun replaceFragment(newFragmentName: String, oldFragmentId: Long) {
+    fun replaceFragment(newFragment: FragmentWithId, oldFragmentId: Long) {
         val position = getPositionById(oldFragmentId)
         fragmentList.removeAt(position)
-        fragmentList.add(position, resolveFragmentByName(newFragmentName))
+        fragmentList.add(position, newFragment)
         notifyItemChanged(position)
     }
 
@@ -51,13 +44,5 @@ class MainPagerAdapter(val fragmentActivity: MainActivity): FragmentStateAdapter
 
     private fun getPositionById(id: Long): Int {
         return fragmentList.map { it.id }.indexOf(id)
-    }
-
-    private fun resolveFragmentByName(name: String): FragmentWithId {
-        return when(name) {
-            "New statistic" -> NewStatisticsFragment(nextId++, fragmentActivity.variableList, fragmentActivity.statisticsList)
-            "New variable" -> NewVariableFragment(nextId++)
-            else -> MainMenuFragment(nextId++)
-        }
     }
 }

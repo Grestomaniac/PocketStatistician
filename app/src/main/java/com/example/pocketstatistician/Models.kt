@@ -5,20 +5,21 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
 
-open class Variable(
+open class Type(
     @PrimaryKey @Required
     var name: String = "",
-    var type: Int = 0,
+    var type: String  = "",
     var variants: RealmList<String> = RealmList()
-): RealmObject() {
-    override fun equals(other: Any?): Boolean {
-        return (this.name.equals(other as String))
-    }
-}
+): RealmObject()
 
 open class Statistic(
     @PrimaryKey @Required
     var name: String = "",
     var variable_names: RealmList<String> = RealmList(),
-    var variable_types: RealmList<Variable> = RealmList()
+    var variable_types: RealmList<Type> = RealmList(),
+    var data: RealmList<Note> = RealmList()
+): RealmObject()
+
+open class Note(
+    var note: RealmList<String> = RealmList()
 ): RealmObject()

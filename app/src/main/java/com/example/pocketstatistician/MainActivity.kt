@@ -1,14 +1,12 @@
-package com.example.pocketstatistician.activities
+package com.example.pocketstatistician
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.example.pocketstatistician.R
-import com.example.pocketstatistician.Statistic
-import com.example.pocketstatistician.Variable
 import com.example.pocketstatistician.adapters.MainPagerAdapter
+import com.example.pocketstatistician.convenience.FragmentWithId
+import com.example.pocketstatistician.fragments.MainMenuFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import io.realm.Realm
@@ -19,13 +17,16 @@ class MainActivity: FragmentActivity(){
     lateinit var viewPager: ViewPager2
     lateinit var fragmentAdapter: MainPagerAdapter
     lateinit var tabLayout: TabLayout
-    val variableList: RealmResults<Variable> = loadVariables()
-    val statisticsList: RealmResults<Statistic> = loadStatistics()
+    lateinit var variableList: RealmResults<Type>
+    lateinit var statisticsList: RealmResults<Statistic>
+    private var nextid = 1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.main_activity_layout)
+
+        variableList = loadVariables()
+        statisticsList = loadStatistics()
 
         viewPager = findViewById(R.id.fragment_container)
         tabLayout = findViewById(R.id.tab_layout)
@@ -33,7 +34,10 @@ class MainActivity: FragmentActivity(){
         fragmentAdapter = MainPagerAdapter(this)
         viewPager.adapter = fragmentAdapter
 
-        fragmentAdapter.addFragment("Main menu")
+        val newFragment =
+            MainMenuFragment(getNextId())
+
+        fragmentAdapter.addFragment(newFragment)
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = fragmentAdapter.fragmentList[position].id.toString()
@@ -43,10 +47,10 @@ class MainActivity: FragmentActivity(){
 
     }
 
-    private fun loadVariables(): RealmResults<Variable> {
-        var variables: RealmResults<Variable>? = null
+    private fun loadVariables(): RealmResults<Type> {
+        var variables: RealmResults<Type>? = null
         Realm.getDefaultInstance().executeTransaction { realm ->
-            val varsFromRealm = realm.where(Variable::class.java).findAll()
+            val varsFromRealm = realm.where(Type::class.java).findAll()
             variables = varsFromRealm
         }
         return variables!!
@@ -62,17 +66,19 @@ class MainActivity: FragmentActivity(){
     }
 
     private fun addTab() {
-        fragmentAdapter.addFragment("Main menu")
+        fragmentAdapter.addFragment(
+            MainMenuFragment(
+                getNextId()
+            )
+        )
     }
 
-    fun addStatisticsButtonOnClick(view: View) {
+    fun getNextId(): Long {
+        return nextid++
     }
 
-    fun addVariableButtonOnClick(view: View) {
-    }
-
-    fun changeFragment(newFragmentName: String, oldFragmentId: Long) {
-        fragmentAdapter.replaceFragment(newFragmentName, oldFragmentId)
+    fun changeFragment(newFragment: FragmentWithId, oldFragmentId: Long) {
+        fragmentAdapter.replaceFragment(newFragment, oldFragmentId)
     }
 
 }

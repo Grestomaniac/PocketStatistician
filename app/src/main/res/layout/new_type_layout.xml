@@ -25,24 +25,10 @@
             android:inputType="text"
             android:autofillHints="untitled" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/variable_type"
-            android:textSize="20sp" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/variable_type_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/variable_types" />
-
         <LinearLayout
-            android:id="@+id/classified"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"

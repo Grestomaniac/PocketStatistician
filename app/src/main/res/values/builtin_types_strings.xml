@@ -1,0 +1,5 @@
+<resources>
+    <string name="integer_type">Целое число</string>
+    <string name="double_type">Вещественное число</string>
+    <string name="date_type">Дата</string>
+</resources>
