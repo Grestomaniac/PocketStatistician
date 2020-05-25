@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/recycler_text_view"
-    android:textSize="20sp"
+    android:textSize="25sp"
     android:gravity="center"
     android:padding="2dp"
     />

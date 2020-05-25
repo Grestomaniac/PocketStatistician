@@ -3,14 +3,10 @@ package com.example.pocketstatistician
 import android.os.Bundle
 import android.widget.Button
 import android.widget.FrameLayout
-import androidx.core.view.size
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.viewpager2.widget.ViewPager2
-import com.example.pocketstatistician.adapters.MainPagerAdapter
-import com.example.pocketstatistician.convenience.FragmentWithId
 import com.example.pocketstatistician.convenience.log
-import com.example.pocketstatistician.convenience.show
-import com.example.pocketstatistician.fragments.MainMenuFragment
+import com.example.pocketstatistician.fragments.menus.MainMenuFragment
 import com.google.android.material.tabs.TabLayout
 import io.realm.Realm
 import io.realm.RealmResults
@@ -19,9 +15,9 @@ import kotlin.collections.ArrayList
 
 class MainActivity: FragmentActivity(){
 
-    private val tabsStack: ArrayList<Stack<FragmentWithId>> = ArrayList()
+    val columnCount = 3
+    private val tabsStack: ArrayList<Stack<Fragment>> = ArrayList()
     lateinit var fragmentContainer: FrameLayout
-    lateinit var fragmentAdapter: MainPagerAdapter
     lateinit var tabLayout: TabLayout
     lateinit var variableList: RealmResults<Type>
     lateinit var statisticsList: RealmResults<Statistic>
@@ -79,8 +75,8 @@ class MainActivity: FragmentActivity(){
         return statistics!!
     }
 
-    private fun addTab(fragment: FragmentWithId = MainMenuFragment(getNextId())) {
-        val newStack = Stack<FragmentWithId>()
+    private fun addTab(fragment: Fragment = MainMenuFragment()) {
+        val newStack = Stack<Fragment>()
         newStack.push(fragment)
         tabsStack.add(newStack)
 
@@ -107,7 +103,7 @@ class MainActivity: FragmentActivity(){
         tabsStack.removeAt(tabPos)
     }
 
-    fun addFragmentToTab(fragment: FragmentWithId, tabId: Int = currentTabPosition) {
+    fun addFragmentToTab(fragment: Fragment, tabId: Int = currentTabPosition) {
         tabsStack[tabId].push(fragment)
 
         val transaction = supportFragmentManager.beginTransaction()

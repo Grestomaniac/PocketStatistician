@@ -11,6 +11,7 @@ import com.example.pocketstatistician.Statistic
 
 class AddNoteAdapter(statistic: Statistic, val context: Context): RecyclerView.Adapter<AddNoteAdapter.ViewHolder>() {
     private val variables = statistic.variable_types
+    private val variableNames = statistic.variable_names
     private var index = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,8 +34,8 @@ class AddNoteAdapter(statistic: Statistic, val context: Context): RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.variableName.text = variables[position]!!.name
-        if (holder.type == "Classified") {
+        holder.variableName.text = variableNames[position]
+        if (holder.type == "classified") {
             val spinner = (holder as ClassifiedViewHolder).spinnerWithVariants
             val variants = variables[position]!!.variants
 

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.R
-import com.example.pocketstatistician.fragments.NewTypeFragment
+import com.example.pocketstatistician.fragments.editors.TypeEditorFragment
 import com.example.pocketstatistician.adapters.SearchAdapter
 import io.realm.RealmList
 
@@ -77,7 +77,7 @@ class SearchDialog(items: RealmList<String>, private val context: Context,
 
     private fun openVariableEditor() {
         alertDialog.dismiss()
-        val intent = Intent(context, NewTypeFragment::class.java)
+        val intent = Intent(context, TypeEditorFragment::class.java)
         context.startActivity(intent)
         (context as AppCompatActivity).finish()
     }

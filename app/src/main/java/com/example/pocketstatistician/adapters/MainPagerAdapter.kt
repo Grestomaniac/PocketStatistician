@@ -1,19 +1,18 @@
 package com.example.pocketstatistician.adapters
 
-import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.pocketstatistician.MainActivity
 import com.example.pocketstatistician.convenience.FragmentWithId
 
 class MainPagerAdapter(fragmentActivity: MainActivity): FragmentStateAdapter(fragmentActivity) {
 
-    val fragmentList = ArrayList<FragmentWithId>()
+    private val fragmentList = ArrayList<FragmentWithId>()
 
     override fun getItemCount(): Int {
         return fragmentList.size
     }
 
-    override fun createFragment(position: Int): Fragment {
+    override fun createFragment(position: Int): androidx.fragment.app.Fragment {
         return fragmentList[position]
     }
 

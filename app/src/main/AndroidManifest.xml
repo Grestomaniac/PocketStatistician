@@ -21,25 +21,5 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.example.pocketstatistician.fragments.NewStatisticsFragment"
-            android:label = "@string/new_statistics_activity_name"
-            android:parentActivityName="com.example.pocketstatistician.MainActivity"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=
-                    "com.example.pocketstatistician.MainActivity" />
-        </activity>
-
-        <activity android:name="com.example.pocketstatistician.fragments.NewTypeFragment"
-            android:label = "@string/new_type_activity_name"
-            android:parentActivityName="com.example.pocketstatistician.MainActivity"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=
-                    "com.example.pocketstatistician.MainActivity" />
-        </activity>
-
     </application>
 </manifest>

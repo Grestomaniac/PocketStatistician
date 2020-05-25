@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.MainActivity
@@ -13,12 +14,11 @@ import com.example.pocketstatistician.Note
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
 import com.example.pocketstatistician.adapters.AddNoteAdapter
-import com.example.pocketstatistician.convenience.FragmentWithId
 import com.example.pocketstatistician.convenience.show
 import io.realm.Realm
 import io.realm.RealmList
 
-class AddNoteFragment(id: Long, private val statistic: Statistic): FragmentWithId(id) {
+class AddNoteFragment(private val statistic: Statistic): Fragment() {
 
     lateinit var mainActivity: MainActivity
     lateinit var recView: RecyclerView

@@ -1,4 +1,4 @@
-package com.example.pocketstatistician.fragments
+package com.example.pocketstatistician.fragments.menus
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,10 +8,12 @@ import android.widget.Button
 import com.example.pocketstatistician.MainActivity
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
-import com.example.pocketstatistician.convenience.FragmentWithId
+import androidx.fragment.app.Fragment
 import com.example.pocketstatistician.convenience.log
+import com.example.pocketstatistician.fragments.AddNoteFragment
+import com.example.pocketstatistician.fragments.table.StatisticAsTableFragment
 
-class StatisticMenuFragment(id: Long, private val statistic: Statistic): FragmentWithId(id) {
+class StatisticMenuFragment(private val statistic: Statistic): Fragment() {
 
     lateinit var mainActivity: MainActivity
 
@@ -32,13 +34,14 @@ class StatisticMenuFragment(id: Long, private val statistic: Statistic): Fragmen
     }
 
     private fun onAddButtonClick() {
-        log("0")
-        val addNoteFragment = AddNoteFragment(mainActivity.getNextId(), statistic)
+        val addNoteFragment =
+            AddNoteFragment(statistic)
         mainActivity.addFragmentToTab(addNoteFragment)
     }
 
     private fun onTableButtonClick() {
-
+        val statisticAsTableFragment = StatisticAsTableFragment(statistic)
+        mainActivity.addFragmentToTab(statisticAsTableFragment)
     }
 
     private fun onAnalyzeButtonClick() {

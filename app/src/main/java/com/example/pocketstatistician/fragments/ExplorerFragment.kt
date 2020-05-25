@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.MainActivity
@@ -15,11 +16,12 @@ import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
 import com.example.pocketstatistician.Type
 import com.example.pocketstatistician.adapters.SearchAdapter
-import com.example.pocketstatistician.convenience.FragmentWithId
+import com.example.pocketstatistician.fragments.menus.StatisticMenuFragment
+import com.example.pocketstatistician.fragments.menus.TypeMenuFragment
 import io.realm.RealmList
 import io.realm.RealmResults
 
-class ExplorerFragment(id: Long, var typeId: Int): FragmentWithId(id) {
+class ExplorerFragment(var typeId: Int): Fragment() {
 
     lateinit var searchBox: EditText
     lateinit var listOfNames: RealmList<String>
@@ -55,12 +57,18 @@ class ExplorerFragment(id: Long, var typeId: Int): FragmentWithId(id) {
                 when (typeId) {
                     0 ->  {
                         val index = variableList.indexOfFirst { it.name == text }
-                        val menuFragment = TypeMenuFragment(mainActivity.getNextId(), variableList[index]!!)
+                        val menuFragment =
+                            TypeMenuFragment(
+                                variableList[index]!!
+                            )
                         mainActivity.addFragmentToTab(menuFragment)
                     }
                     else -> {
                         val index = statisticList.indexOfFirst { it.name == text }
-                        val menuFragment = StatisticMenuFragment(mainActivity.getNextId(), statisticList[index]!!)
+                        val menuFragment =
+                            StatisticMenuFragment(
+                                statisticList[index]!!
+                            )
                         mainActivity.addFragmentToTab(menuFragment)
                     }
                 }

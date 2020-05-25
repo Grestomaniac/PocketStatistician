@@ -1,4 +1,4 @@
-package com.example.pocketstatistician.fragments
+package com.example.pocketstatistician.fragments.editors
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Type
 import com.example.pocketstatistician.adapters.VariantsAdapter
-import com.example.pocketstatistician.convenience.FragmentWithId
+import androidx.fragment.app.Fragment
 import com.example.pocketstatistician.convenience.isInteger
 import com.example.pocketstatistician.convenience.show
 import io.realm.Realm
 import io.realm.RealmList
 
-class NewTypeFragment(id: Long): FragmentWithId(id) {
+class TypeEditorFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.new_type_layout, container, false)
@@ -37,8 +37,7 @@ class NewTypeFragment(id: Long): FragmentWithId(id) {
 
         val count = variablesCount.text.toString()
         if (!isInteger(count, activity!!)) return
-        val adapter =
-            VariantsAdapter(count.toInt())
+        val adapter = VariantsAdapter(count.toInt())
 
         val variantsBox = view!!.findViewById<LinearLayout>(R.id.var_rec_view)
         val variantsRecyclerView = view!!.findViewById<RecyclerView>(R.id.list_of_variants)
