@@ -1,10 +1,14 @@
-package com.example.pocketstatistician
+package com.example.pocketstatistician.activities
 
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Button
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.example.pocketstatistician.R
+import com.example.pocketstatistician.Statistic
+import com.example.pocketstatistician.Type
 import com.example.pocketstatistician.convenience.log
 import com.example.pocketstatistician.fragments.menus.MainMenuFragment
 import com.google.android.material.tabs.TabLayout
@@ -133,6 +137,10 @@ class MainActivity: FragmentActivity(){
 
     fun getNextId(): Long {
         return nextFragmentId++
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return super.onCreateOptionsMenu(menu)
     }
 
 }

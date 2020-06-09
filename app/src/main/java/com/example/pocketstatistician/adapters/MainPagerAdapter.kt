@@ -1,7 +1,7 @@
 package com.example.pocketstatistician.adapters
 
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.pocketstatistician.MainActivity
+import com.example.pocketstatistician.activities.MainActivity
 import com.example.pocketstatistician.convenience.FragmentWithId
 
 class MainPagerAdapter(fragmentActivity: MainActivity): FragmentStateAdapter(fragmentActivity) {

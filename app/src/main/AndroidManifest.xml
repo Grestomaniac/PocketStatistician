@@ -2,6 +2,7 @@
     package="com.example.pocketstatistician">
 
     <application
+        android:hardwareAccelerated="true"
         android:name=".Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.example.pocketstatistician.MainActivity"
+        <activity android:name=".activities.MainMenuActivity"
             android:label = "Main Activity"
             android:windowSoftInputMode="adjustPan">
 
@@ -19,6 +20,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.StatisticsMenuActivity"
+            android:label="@string/statistic_menu">
+        </activity>
+
+        <activity android:name=".activities.AddNoteActivity"
+            android:label="@string/add_note">
+        </activity>
+
+        <activity android:name=".activities.TableActivity">
         </activity>
 
     </application>

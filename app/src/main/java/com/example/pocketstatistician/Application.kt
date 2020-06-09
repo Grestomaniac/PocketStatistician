@@ -5,13 +5,36 @@ import android.content.Context
 import com.example.pocketstatistician.convenience.log
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.RealmResults
 
 class Application: Application() {
+
+    lateinit var types: RealmResults<Type>
+    lateinit var statistics: RealmResults<Statistic>
 
     override fun onCreate() {
         super.onCreate()
         Realm.init(this)
-        checkFirstRun()
+        types = loadTypes()
+        statistics = loadStatistics()
+    }
+
+    private fun loadTypes(): RealmResults<Type> {
+        var variables: RealmResults<Type>? = null
+        Realm.getDefaultInstance().executeTransaction { realm ->
+            val varsFromRealm = realm.where(Type::class.java).findAll()
+            variables = varsFromRealm
+        }
+        return variables!!
+    }
+
+    private fun loadStatistics(): RealmResults<Statistic> {
+        var statistics: RealmResults<Statistic>? = null
+        Realm.getDefaultInstance().executeTransaction { realm ->
+            val dataFromRealm = realm.where(Statistic::class.java).findAll()
+            statistics = dataFromRealm
+        }
+        return statistics!!
     }
 
     private fun checkFirstRun() {

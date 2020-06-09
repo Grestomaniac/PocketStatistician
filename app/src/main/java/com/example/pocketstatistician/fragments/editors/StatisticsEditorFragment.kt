@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.*
+import com.example.pocketstatistician.activities.MainActivity
 import com.example.pocketstatistician.adapters.ListOfValuesAdapter
 import com.example.pocketstatistician.convenience.*
 import io.realm.Realm

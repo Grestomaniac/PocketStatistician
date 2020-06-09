@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
-import com.example.pocketstatistician.MainActivity
+import com.example.pocketstatistician.activities.MainActivity
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.fragments.ExplorerFragment
 import com.example.pocketstatistician.fragments.editors.StatisticsEditorFragment

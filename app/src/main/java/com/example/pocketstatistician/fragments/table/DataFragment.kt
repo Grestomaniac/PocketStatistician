@@ -8,16 +8,14 @@ import android.widget.ArrayAdapter
 import android.widget.GridView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pocketstatistician.MainActivity
+import com.example.pocketstatistician.activities.MainActivity
 import com.example.pocketstatistician.Note
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Type
 import com.example.pocketstatistician.adapters.TableAdapter
 import com.example.pocketstatistician.convenience.NoteDialog
-import com.example.pocketstatistician.convenience.log
 import io.realm.RealmList
 
 class DataFragment(val variableTypes: RealmList<Type>, val data: RealmList<Note>, val variableNames: RealmList<String>, val dataOffset: Int, val dataSize: Int): Fragment() {

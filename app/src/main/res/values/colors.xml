@@ -3,4 +3,10 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="colorBorder">#000000</color>
+    <color name="colorTableTop">#FFA07A</color>
+    <color name="colorTableDataFirst">#FFE4B5</color>
+    <color name="colorTableDataSecond">#FFDAB9</color>
+    <color name="colorSelectedData">#FF4500</color>
+    <color name="colorTableNavigator">#FFA07A</color>
 </resources>

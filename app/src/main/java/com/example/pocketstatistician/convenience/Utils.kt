@@ -5,8 +5,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.pocketstatistician.R
-import com.example.pocketstatistician.Type
-import io.realm.RealmResults
 
 fun isInteger(str: String?, context: Context): Boolean {
     if (str == null) {

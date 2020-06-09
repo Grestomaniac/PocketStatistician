@@ -21,4 +21,17 @@
         <item name="android:textSize">24sp</item>
     </style>
 
+    <style name="headline_style">
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">7dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:background">@drawable/headline</item>
+    </style>
+
+    <style name="rounded_basic_style">
+        <item name="android:layout_margin">7dp</item>
+        <item name="android:background">@drawable/rounded_corner</item>
+    </style>
+
 </resources>

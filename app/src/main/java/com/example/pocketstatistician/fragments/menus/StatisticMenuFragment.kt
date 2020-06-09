@@ -5,12 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.example.pocketstatistician.MainActivity
+import com.example.pocketstatistician.activities.MainActivity
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
 import androidx.fragment.app.Fragment
-import com.example.pocketstatistician.convenience.log
-import com.example.pocketstatistician.fragments.AddNoteFragment
 import com.example.pocketstatistician.fragments.table.StatisticAsTableFragment
 
 class StatisticMenuFragment(private val statistic: Statistic): Fragment() {
@@ -34,9 +32,6 @@ class StatisticMenuFragment(private val statistic: Statistic): Fragment() {
     }
 
     private fun onAddButtonClick() {
-        val addNoteFragment =
-            AddNoteFragment(statistic)
-        mainActivity.addFragmentToTab(addNoteFragment)
     }
 
     private fun onTableButtonClick() {

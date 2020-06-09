@@ -53,7 +53,21 @@
     <string name="delete_note">Удалить запись</string>
     <string name="cancel">Отмена</string>
     <string name="move_note">Переместить запись</string>
-    <string name="note">Запись %1$d</string>
+    <string name="note_number">Запись %1$d</string>
+    <string name="note">Запись:</string>
+    <string name="variable_value">Переменная:</string>
     <string name="action_settings">Настройки</string>
+
+    <string name="statistics_count">%1$d статистик</string>
+    <string name="note_count">%1$d записей</string>
+    <string name="variant_count">%1$d вариантов</string>
+
+    <string name="statistic_menu">Меню статистики</string>
+    <string name="add_note_header">%1$s с %2$d записями</string>
+    <string name="cannot_delete">Нельзя удалить</string>
+    <string name="finished">Готово</string>
+    <string name="add_note_header2">%1$d/%2$d</string>
+    <string name="clear">Очистить</string>
+    <string name="table_label">Таблица</string>
 
 </resources>

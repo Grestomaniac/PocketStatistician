@@ -5,32 +5,66 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="2">
 
         <TextView
-            android:id="@+id/statistic_name"
+            android:id="@+id/header_1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="7"/>
+            style="@style/headline_style"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/header_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            style="@style/headline_style"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/note_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="25">
+    </androidx.viewpager2.widget.ViewPager2>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        style="?android:attr/buttonBarStyle">
+
+        <Button
+            android:id="@+id/delete_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/delete"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:onClick="onDeleteButtonClick"/>
+
+        <Button
+            android:id="@+id/clear_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/close"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:onClick="onClearButtonClick"/>
 
         <Button
             android:id="@+id/save_button"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="@string/save"/>
+            android:layout_height="match_parent"
+            android:text="@string/save"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:onClick="onSaveButtonClick"/>
 
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/variables"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </RelativeLayout>
 
 </LinearLayout>

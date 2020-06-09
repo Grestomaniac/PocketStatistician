@@ -11,7 +11,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pocketstatistician.MainActivity
+import com.example.pocketstatistician.activities.MainActivity
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
 import com.example.pocketstatistician.Type

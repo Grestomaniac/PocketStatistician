@@ -1,7 +1,7 @@
 package com.example.pocketstatistician.adapters.table
 
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.pocketstatistician.MainActivity
+import com.example.pocketstatistician.activities.MainActivity
 import com.example.pocketstatistician.Note
 import com.example.pocketstatistician.Type
 import com.example.pocketstatistician.fragments.table.DataFragment

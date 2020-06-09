@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.pocketstatistician.*
+import com.example.pocketstatistician.activities.MainActivity
 import com.example.pocketstatistician.adapters.table.TablePagerAdapter
-import com.example.pocketstatistician.convenience.log
 
 class StatisticAsTableFragment(statistic: Statistic): Fragment() {
 
@@ -54,8 +52,4 @@ class StatisticAsTableFragment(statistic: Statistic): Fragment() {
 
     }
 
-}
-
-class VarNameViewHolder(view: View): RecyclerView.ViewHolder(view) {
-    val nameOfVariable: TextView = view.findViewById(R.id.recycler_text_view)
 }

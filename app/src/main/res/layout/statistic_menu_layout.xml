@@ -6,36 +6,47 @@
     <TextView
         android:id="@+id/statistic_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        style="@style/headline_style"/>
 
     <Button
         android:id="@+id/button_add_note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_note"/>
+        style="@style/rounded_basic_style"
+        android:text="@string/add_note"
+        android:onClick="onAddButtonClick"/>
 
     <Button
         android:id="@+id/button_table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/open_as_table"/>
+        style="@style/rounded_basic_style"
+        android:text="@string/open_as_table"
+        android:onClick="onTableButtonClick"/>
 
     <Button
         android:id="@+id/button_analyze"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/analyze"/>
+        style="@style/rounded_basic_style"
+        android:text="@string/analyze"
+        android:onClick="onAnalyzeButtonClick" />
 
     <Button
         android:id="@+id/button_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/edit"/>
+        style="@style/rounded_basic_style"
+        android:text="@string/edit"
+        android:onClick="onEditButtonClick"/>
 
     <Button
         android:id="@+id/button_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/delete"/>
+        style="@style/rounded_basic_style"
+        android:text="@string/delete"
+        android:onClick="onDeleteButtonClick"/>
 
 </LinearLayout>
