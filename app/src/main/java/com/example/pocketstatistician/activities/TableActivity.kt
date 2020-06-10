@@ -15,14 +15,15 @@ import com.example.pocketstatistician.adapters.table.DataPlaceHolderItemAdapter
 import com.example.pocketstatistician.adapters.table.DataPlaceholderAdapter
 import com.example.pocketstatistician.adapters.table.NotePlaceholderAdapter
 import com.example.pocketstatistician.adapters.table.VariablePlaceholderAdapter
+import com.example.pocketstatistician.convenience.CustomRecyclerView
 import com.example.pocketstatistician.convenience.VariantChooserDialog
 import com.example.pocketstatistician.convenience.log
 import io.realm.RealmList
 
 class TableActivity: AppCompatActivity() {
 
-    lateinit var variablePlaceholder: RecyclerView
-    lateinit var notePlaceholder: RecyclerView
+    lateinit var variablePlaceholder: CustomRecyclerView
+    lateinit var notePlaceholder: CustomRecyclerView
     lateinit var dataPlaceholder: RecyclerView
     lateinit var pickerEditText: EditText
     lateinit var pickerTextView: TextView
@@ -33,10 +34,10 @@ class TableActivity: AppCompatActivity() {
     lateinit var navigatorButton: Button
     lateinit var navigatorTextField: NavigatorTextField
 
-    val verticalScrollListeners: ArrayList<RecyclerView.OnScrollListener> = ArrayList()
-    private val horizontalScrollListeners: ArrayList<RecyclerView.OnScrollListener> = ArrayList()
-    lateinit var scrollStateChangedListener: RecyclerView.OnScrollListener
+    lateinit var verticalScrollListener: RecyclerView.OnScrollListener
+    lateinit var horizontalScrollListener: RecyclerView.OnScrollListener
     val selectedView: SelectedView = SelectedView()
+    var scrollingOnOtherAxis = false
 
     lateinit var statistic: Statistic
     lateinit var variableNames: RealmList<String>
@@ -59,62 +60,23 @@ class TableActivity: AppCompatActivity() {
         title = statistic.name
 
         arrayOfSizes = getMaxSizes()
-        verticalScrollListeners.add(object: RecyclerView.OnScrollListener() {
+        verticalScrollListener = object: RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                dataPlaceholder.removeOnScrollListener(verticalScrollListeners[1])
-                dataPlaceholder.scrollBy(0, dy)
-                dataPlaceholder.addOnScrollListener(verticalScrollListeners[1])
+                if (recyclerView == notePlaceholder) scrollAttachedView(dataPlaceholder, dy)
+                else scrollAttachedView(notePlaceholder, dy)
             }
-        })
-        verticalScrollListeners.add(object: RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                notePlaceholder.removeOnScrollListener(verticalScrollListeners[0])
-                notePlaceholder.scrollBy(0, dy)
-                notePlaceholder.addOnScrollListener(verticalScrollListeners[0])
+            private fun scrollAttachedView(recyclerView: RecyclerView, dy: Int) {
+                recyclerView.removeOnScrollListener(verticalScrollListener)
+                recyclerView.scrollBy(0, dy)
+                recyclerView.addOnScrollListener(verticalScrollListener)
             }
-        })
+        }
 
-        verticalScrollListeners.add(object: RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    log("catched")
-                    val view = getViewFromData(selectedView.notePosition, selectedView.variablePosition)
-                    selectedView.view = view
-                    selectedView.view!!.background = getDrawable(R.drawable.table_selected)
-                    attachToNavigator()
-                    notePlaceholder.removeOnScrollListener(this)
-                }
-            }
-        })
-
-        horizontalScrollListeners.add(object: RecyclerView.OnScrollListener() {
-            var scrollMomentum = 0
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                disconnectAllListeners()
-                moveAllRecyclerViews(dx)
-                connectAllChildrenListeners()
-                scrollMomentum += dx
-            }
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == 0) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    val linearManager = variablePlaceholder.layoutManager as LinearLayoutManager
-                    val position = if (scrollMomentum < 0) linearManager.findFirstVisibleItemPosition() else linearManager.findLastVisibleItemPosition()
-                    scrollAllHorizontallyToPosition(position)
-                    recViewPosition = position
-                    scrollMomentum = 0
-                }
-            }
-        })
-
-        horizontalScrollListeners.add(object: RecyclerView.OnScrollListener() {
+        horizontalScrollListener = object: RecyclerView.OnScrollListener() {
             var scrollMomentum = 0
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 disconnectListenersExceptOne(recyclerView)
-                moveRecyclerViewsExceptOne(recyclerView, dx)
+                scrollAllRecyclerViewsExceptOne(recyclerView, dx)
                 connectChildrenListenersExceptOne(recyclerView)
                 scrollMomentum += dx
             }
@@ -122,30 +84,11 @@ class TableActivity: AppCompatActivity() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == 0) {
-                    super.onScrollStateChanged(recyclerView, newState)
                     val linearManager = variablePlaceholder.layoutManager as LinearLayoutManager
                     val position = if (scrollMomentum < 0) linearManager.findFirstVisibleItemPosition() else linearManager.findLastVisibleItemPosition()
                     scrollAllHorizontallyToPosition(position)
                     recViewPosition = position
                     scrollMomentum = 0
-                }
-            }
-        })
-
-        scrollStateChangedListener = object: RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                log("scrolling")
-            }
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                log("state have changed")
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    log("catched")
-                    val view = getViewFromData(selectedView.notePosition, selectedView.variablePosition)
-                    selectedView.view = view
-                    selectedView.view!!.background = getDrawable(R.drawable.table_selected)
-                    attachToNavigator()
-                    variablePlaceholder.removeOnScrollListener(this)
                 }
             }
         }
@@ -174,33 +117,57 @@ class TableActivity: AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         variablePlaceholder.layoutManager = layoutManager
-        variablePlaceholder.addOnScrollListener(horizontalScrollListeners[0])
 
         notePlaceholder.adapter = NotePlaceholderAdapter(data, convertToPx(layoutHeight))
         notePlaceholder.layoutManager = LinearLayoutManager(this)
-        notePlaceholder.addOnScrollListener(verticalScrollListeners[0])
+        notePlaceholder.addOnScrollListener(verticalScrollListener)
 
-        dataPlaceholder.adapter = DataPlaceholderAdapter(data, this, arrayOfSizes, horizontalScrollListeners[1])
+        dataPlaceholder.adapter = DataPlaceholderAdapter(data, this, arrayOfSizes, horizontalScrollListener)
         dataPlaceholder.layoutManager = LinearLayoutManager(this)
-        dataPlaceholder.addOnScrollListener(verticalScrollListeners[1])
+        dataPlaceholder.addOnScrollListener(verticalScrollListener)
 
         gestureView.setOnTouchListener(touchListener)
 
+        val stoppedListener = object: CustomRecyclerView.OnScrollStoppedListener {
+            override fun onScrollStopped() {
+                selectViewOnScrollStopped()
+            }
+        }
+        notePlaceholder.setOnScrollStoppedListener(stoppedListener)
+        variablePlaceholder.setOnScrollStoppedListener(stoppedListener)
+        notePlaceholder.isHorizontal = false
+
+    }
+
+    fun selectViewOnScrollStopped() {
+        if (scrollingOnOtherAxis) {
+            scrollingOnOtherAxis = false
+            notePlaceholder.stopScrollTask()
+        }
+        val view = getViewFromData(selectedView.notePosition, selectedView.variablePosition)
+        selectedView.view = view
+        selectedView.view!!.background = getDrawable(R.drawable.table_selected)
+        attachToNavigator()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
         dataPlaceholder.addOnChildAttachStateChangeListener(object: RecyclerView.OnChildAttachStateChangeListener {
             override fun onChildViewDetachedFromWindow(view: View) {
             }
 
             override fun onChildViewAttachedToWindow(view: View) {
                 val holder = dataPlaceholder.getChildViewHolder(view) as DataPlaceholderAdapter.ViewHolder
+                holder.row.clearOnScrollListeners()
                 holder.row.scrollToPosition(recViewPosition)
+                holder.row.addOnScrollListener(horizontalScrollListener)
             }
         })
-
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
     }
 
     private fun getViewFromData(notePosition: Int, variablePosition: Int): TextView {
@@ -235,21 +202,30 @@ class TableActivity: AppCompatActivity() {
     }
 
     fun disconnectListenersExceptOne(except: RecyclerView) {
+        if (except == variablePlaceholder) {
+            disconnectAllListeners()
+            return
+        }
+
         for (i in 0 until dataPlaceholder.childCount) {
             val rv = dataPlaceholder.getChildViewHolder(dataPlaceholder.getChildAt(i)) as DataPlaceholderAdapter.ViewHolder
-            if (rv.row != except) rv.row.removeOnScrollListener(horizontalScrollListeners[1])
+            if (rv.row != except) rv.row.removeOnScrollListener(horizontalScrollListener)
         }
-        variablePlaceholder.removeOnScrollListener(horizontalScrollListeners[0])
+        variablePlaceholder.removeOnScrollListener(horizontalScrollListener)
     }
 
     fun disconnectAllListeners() {
         for (i in 0 until dataPlaceholder.childCount) {
             val rv = dataPlaceholder.getChildViewHolder(dataPlaceholder.getChildAt(i)) as DataPlaceholderAdapter.ViewHolder
-            rv.row.removeOnScrollListener(horizontalScrollListeners[1])
+            rv.row.removeOnScrollListener(horizontalScrollListener)
         }
     }
 
-    fun moveRecyclerViewsExceptOne(except: RecyclerView? = null, dx: Int) {
+    fun scrollAllRecyclerViewsExceptOne(except: RecyclerView, dx: Int) {
+        if (except == variablePlaceholder) {
+            scrollAllRecyclerViewsBy(dx)
+            return
+        }
         for (i in 0 until dataPlaceholder.childCount) {
             val rv = dataPlaceholder.getChildViewHolder(dataPlaceholder.getChildAt(i)) as DataPlaceholderAdapter.ViewHolder
             if (rv.row != except) rv.row.scrollBy(dx, 0)
@@ -257,25 +233,29 @@ class TableActivity: AppCompatActivity() {
         variablePlaceholder.scrollBy(dx, 0)
     }
 
-    fun moveAllRecyclerViews(dx: Int) {
+    fun scrollAllRecyclerViewsBy(dx: Int) {
         for (i in 0 until dataPlaceholder.childCount) {
             val rv = dataPlaceholder.getChildViewHolder(dataPlaceholder.getChildAt(i)) as DataPlaceholderAdapter.ViewHolder
             rv.row.scrollBy(dx, 0)
         }
     }
 
-    fun connectChildrenListenersExceptOne(except: RecyclerView? = null) {
+    fun connectChildrenListenersExceptOne(except: RecyclerView) {
+        if (except == variablePlaceholder) {
+            connectAllChildrenListeners()
+            return
+        }
         for (i in 0 until dataPlaceholder.childCount) {
             val rv = dataPlaceholder.getChildViewHolder(dataPlaceholder.getChildAt(i)) as DataPlaceholderAdapter.ViewHolder
-            if (rv.row != except) rv.row.addOnScrollListener(horizontalScrollListeners[1])
+            if (rv.row != except) rv.row.addOnScrollListener(horizontalScrollListener)
         }
-        variablePlaceholder.addOnScrollListener(horizontalScrollListeners[0])
+        variablePlaceholder.addOnScrollListener(horizontalScrollListener)
     }
 
     fun connectAllChildrenListeners() {
         for (i in 0 until dataPlaceholder.childCount) {
             val rv = dataPlaceholder.getChildViewHolder(dataPlaceholder.getChildAt(i)) as DataPlaceholderAdapter.ViewHolder
-            rv.row.addOnScrollListener(horizontalScrollListeners[1])
+            rv.row.addOnScrollListener(horizontalScrollListener)
         }
     }
 
@@ -285,23 +265,20 @@ class TableActivity: AppCompatActivity() {
             rv.row.scrollToPosition(position)
         }
         variablePlaceholder.scrollToPosition(position)
+        recViewPosition = position
     }
 
     fun scrollAllHorizontallyToPosition(position: Int) {
         disconnectAllListeners()
-        variablePlaceholder.removeOnScrollListener(horizontalScrollListeners[0])
         moveAllRecyclerViewsToPosition(position)
         connectAllChildrenListeners()
-        variablePlaceholder.addOnScrollListener(horizontalScrollListeners[0])
     }
 
     fun scrollAllVerticallyToPosition(verticalPosition: Int) {
-        dataPlaceholder.removeOnScrollListener(verticalScrollListeners[1])
-        notePlaceholder.removeOnScrollListener(verticalScrollListeners[0])
-        dataPlaceholder.scrollToPosition(verticalPosition)
-        notePlaceholder.scrollToPosition(verticalPosition)
-        dataPlaceholder.addOnScrollListener(verticalScrollListeners[1])
-        notePlaceholder.addOnScrollListener(verticalScrollListeners[0])
+        dataPlaceholder.removeOnScrollListener(verticalScrollListener)
+        dataPlaceholder.post { dataPlaceholder.scrollToPosition(verticalPosition) }
+        notePlaceholder.post { notePlaceholder.scrollToPosition(verticalPosition) }
+        dataPlaceholder.addOnScrollListener(verticalScrollListener)
     }
 
     fun processDataOnClick(view: View, notePosition: Int, variablePosition: Int) {
@@ -331,40 +308,55 @@ class TableActivity: AppCompatActivity() {
         selectedView.view!!.background = getDrawable(R.drawable.table_selected)
     }
 
-    fun getViewAt(notePosition: Int, variablePosition: Int): View? {
-        val noteView = dataPlaceholder.findViewHolderForAdapterPosition(notePosition)
-        if (noteView == null) {
-            log("view at n=${notePosition+1} v=${variableNames[variablePosition]} is not visible vertically")
-            scrollAllVerticallyToPosition(notePosition)
-            dataPlaceholder.removeOnScrollListener(verticalScrollListeners[2])
-            dataPlaceholder.addOnScrollListener(verticalScrollListeners[2])
-            return null
-        }
-        else {
-            if (dataPlaceholder.layoutManager!!.isViewPartiallyVisible(noteView.itemView, false, true)) {
-                log("view at n=${notePosition+1} v=${variableNames[variablePosition]} is not completely visible, moving now vertically")
-                scrollAllVerticallyToPosition(notePosition)
-            }
-            else log("view at n=${notePosition+1} v=${variableNames[variablePosition]} is completely visible vertically")
-            return getViewAtVariablePosition(variablePosition, noteView as DataPlaceholderAdapter.ViewHolder)
-        }
+    fun getAdapterPositionRange(holder: RecyclerView): Array<Int> {
+        val layoutManager = holder.layoutManager as LinearLayoutManager
+        val firstNotePos = layoutManager.findFirstVisibleItemPosition()
+        val secondNotePos = layoutManager.findLastVisibleItemPosition()
+        log("first visible $firstNotePos, second visible $secondNotePos")
+        return arrayOf(firstNotePos, secondNotePos)
     }
 
-    fun getViewAtVariablePosition(variablePosition: Int, noteHolder: DataPlaceholderAdapter.ViewHolder): View? {
-        val variableView = noteHolder.row.findViewHolderForAdapterPosition(variablePosition)
-        if (variableView != null) {
-            if (noteHolder.row.layoutManager!!.isViewPartiallyVisible(variableView.itemView, false, true)) {
-                scrollAllHorizontallyToPosition(variablePosition)
-                log("view is not completely visible, moving now horizontally")
+    fun getAdapterPositionRangeForBoth(): VisibleRange {
+        val verticalRange = getAdapterPositionRange(variablePlaceholder)
+        val horizontalRange = getAdapterPositionRange(notePlaceholder)
+        return VisibleRange(horizontalRange[0], horizontalRange[1], verticalRange[0], verticalRange[1])
+    }
+
+    fun getViewAt(notePosition: Int, variablePosition: Int): View? {
+        val visibleRange = getAdapterPositionRangeForBoth()
+        log("n1=${visibleRange.n1pos} n2=${visibleRange.n2pos} v1=${visibleRange.v1pos} v2=${visibleRange.v2pos}")
+        val checkIfContains = visibleRange.checkIfContains(notePosition, variablePosition)
+        when (checkIfContains) {
+            3 -> {
+                val noteHolder = dataPlaceholder.findViewHolderForAdapterPosition(notePosition) as DataPlaceholderAdapter.ViewHolder
+                val variableHolder = noteHolder.row.findViewHolderForAdapterPosition(variablePosition) as DataPlaceHolderItemAdapter.ViewHolder
+
+                if (dataPlaceholder.layoutManager!!.isViewPartiallyVisible(noteHolder.itemView, false, true)) scrollAllVerticallyToPosition(notePosition)
+                if (noteHolder.row.layoutManager!!.isViewPartiallyVisible(variableHolder.itemView, false, true)) scrollAllHorizontallyToPosition(variablePosition)
+
+                return variableHolder.textView
             }
-            else log("view is completely visible")
-            return (variableView as DataPlaceHolderItemAdapter.ViewHolder).textView
-        } else {
-            scrollAllHorizontallyToPosition(variablePosition)
-            variablePlaceholder.removeOnScrollListener(scrollStateChangedListener)
-            variablePlaceholder.addOnScrollListener(scrollStateChangedListener)
-            log("view is not visible, moving now horizontally")
-            return null
+            2 -> {
+                log("not visible vertically")
+                scrollAllVerticallyToPosition(notePosition)
+                notePlaceholder.startScrollerTask()
+                return null
+            }
+            1 -> {
+                log("not visible horizontally")
+                scrollAllHorizontallyToPosition(variablePosition)
+                variablePlaceholder.startScrollerTask()
+                return null
+            }
+            else -> {
+                log("not visible")
+                scrollAllHorizontallyToPosition(variablePosition)
+                scrollAllVerticallyToPosition(notePosition)
+                scrollingOnOtherAxis = true
+                variablePlaceholder.startScrollerTask()
+                notePlaceholder.startScrollerTask()
+                return null
+            }
         }
     }
 
@@ -402,6 +394,10 @@ class TableActivity: AppCompatActivity() {
 
     fun selectNext() {
         if (selectedView.variablePosition < variableNames.size - 1) selectViewAtPosition(selectedView.notePosition, selectedView.variablePosition + 1)
+        else if (selectedView.notePosition < data.size - 1) selectViewAtPosition(selectedView.notePosition + 1, 0)
+        else {
+            //TODO(show note dialog)
+        }
     }
 
     class SelectedView(var view: TextView? = null, var variablePosition: Int = 0, var notePosition: Int = 0)
@@ -427,6 +423,25 @@ class TableActivity: AppCompatActivity() {
         fun setText(text: CharSequence) {
             if (textView.isVisible) textView.text = text
             else editText.setText(text)
+        }
+    }
+
+    class VisibleRange(val n1pos: Int, val n2pos: Int, val v1pos: Int, val v2pos: Int) {
+        fun checkIfContains(notePosition: Int, variablePosition: Int): Int {
+            val containsVertically = isContainsVertically(notePosition)
+            val containsHorizontally = isContainsHorizontally(variablePosition)
+            if (containsHorizontally && containsVertically) return 3 //visible
+            if (containsHorizontally) return 2 //not visible vertically
+            if (containsVertically) return 1 //not visible horizontally
+            return 0 //not visible
+        }
+
+        private fun isContainsHorizontally(variablePosition: Int): Boolean {
+            return !(v1pos > variablePosition || v2pos < variablePosition)
+        }
+
+        private fun isContainsVertically(notePosition: Int): Boolean {
+            return !(n1pos > notePosition || n2pos < notePosition)
         }
     }
 

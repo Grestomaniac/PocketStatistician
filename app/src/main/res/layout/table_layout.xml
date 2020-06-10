@@ -20,7 +20,7 @@
                 android:layout_height="50dp"
                 android:background="@drawable/table_item" />
 
-            <androidx.recyclerview.widget.RecyclerView
+            <com.example.pocketstatistician.convenience.CustomRecyclerView
                 android:id="@+id/note_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -32,10 +32,10 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
+            <com.example.pocketstatistician.convenience.CustomRecyclerView
                 android:id="@+id/variable_placeholder"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/data_placeholder"
