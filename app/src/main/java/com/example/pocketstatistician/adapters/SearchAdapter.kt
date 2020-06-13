@@ -20,7 +20,7 @@ class SearchAdapter(private val defaultDataList: RealmList<String>)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchDialogViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.just_text_view, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.picker_item, parent, false)
         return SearchDialogViewHolder(view)
     }
 
@@ -57,7 +57,7 @@ class SearchAdapter(private val defaultDataList: RealmList<String>)
             view.setOnClickListener(this)
         }
 
-        val textView: TextView = view.findViewById(R.id.recycler_text_view)
+        val textView: TextView = view.findViewById(R.id.picker_item)
         override fun onClick(v: View?) {
             onEntryClickListener?.onEntryClick(v!!, layoutPosition)
         }

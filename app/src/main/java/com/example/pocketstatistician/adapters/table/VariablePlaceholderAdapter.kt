@@ -5,12 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.R
+import com.example.pocketstatistician.Variable
 import io.realm.RealmList
 
-class VariablePlaceholderAdapter(private val variables: RealmList<String>, private val columnSizes: ArrayList<Int>): RecyclerView.Adapter<VariablePlaceholderAdapter.ViewHolder>() {
+class VariablePlaceholderAdapter(private val variables: RealmList<Variable>, private val columnSizes: ArrayList<Int>): RecyclerView.Adapter<VariablePlaceholderAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.just_text_view, parent, false)
@@ -22,7 +22,7 @@ class VariablePlaceholderAdapter(private val variables: RealmList<String>, priva
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.variable.text = variables[position]
+        holder.variable.text = variables[position]!!.name
         val layoutParams = LinearLayout.LayoutParams(columnSizes[position], columnSizes.last())
         holder.variable.layoutParams = layoutParams
     }

@@ -33,5 +33,9 @@
         <activity android:name=".activities.TableActivity">
         </activity>
 
+        <activity android:name=".activities.StatisticEditor">
+
+        </activity>
+
     </application>
 </manifest>

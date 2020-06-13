@@ -11,16 +11,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.Note
 import com.example.pocketstatistician.R
-import com.example.pocketstatistician.Type
+import com.example.pocketstatistician.Variable
 import io.realm.RealmList
 
-class NoteAdapter(val variableTypes: RealmList<Type>, val variableNames: RealmList<String>, val note: Note, val context: Context): RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
+class NoteAdapter(val variables: RealmList<Variable>, val note: Note, val context: Context): RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
 
     private var index = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        return when (variableTypes[index++]!!.type) {
+        return when (variables[index++]!!.type!!.type) {
             "classified" -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.note_item_with_spinner, parent, false)
                 ClassifiedViewHolder(view)
@@ -33,14 +33,14 @@ class NoteAdapter(val variableTypes: RealmList<Type>, val variableNames: RealmLi
     }
 
     override fun getItemCount(): Int {
-        return variableTypes.size
+        return variables.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val varType = variableTypes[position]!!
-        holder.variableName.text = variableNames[position]
+        val varType = variables[position]!!.type
+        holder.variableName.text = variables[position]!!.name
 
-        if (varType.type == "classified") {
+        if (varType!!.type == "classified") {
             val spinner = (holder as ClassifiedViewHolder).spinnerWithVariants
             val variants = RealmList("")
             variants.addAll(varType.variants)

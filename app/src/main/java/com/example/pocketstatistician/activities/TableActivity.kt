@@ -15,9 +15,8 @@ import com.example.pocketstatistician.adapters.table.DataPlaceHolderItemAdapter
 import com.example.pocketstatistician.adapters.table.DataPlaceholderAdapter
 import com.example.pocketstatistician.adapters.table.NotePlaceholderAdapter
 import com.example.pocketstatistician.adapters.table.VariablePlaceholderAdapter
-import com.example.pocketstatistician.convenience.CustomRecyclerView
-import com.example.pocketstatistician.convenience.VariantChooserDialog
-import com.example.pocketstatistician.convenience.log
+import com.example.pocketstatistician.convenience.*
+import io.realm.Realm
 import io.realm.RealmList
 
 class TableActivity: AppCompatActivity() {
@@ -38,11 +37,12 @@ class TableActivity: AppCompatActivity() {
     lateinit var horizontalScrollListener: RecyclerView.OnScrollListener
     val selectedView: SelectedView = SelectedView()
     var scrollingOnOtherAxis = false
+    private val changes: ArrayList<DataChange> = ArrayList()
+    private val actions: ArrayList<Action> = ArrayList()
 
     lateinit var statistic: Statistic
-    lateinit var variableNames: RealmList<String>
-    lateinit var variableTypes: RealmList<Type>
-    lateinit var data: RealmList<Note>
+    lateinit var variables: RealmList<Variable>
+    val data: RealmList<Note> = RealmList()
     lateinit var arrayOfSizes: ArrayList<Int>
     var layoutHeight = 50
     var coefficient: Int = 20
@@ -54,9 +54,8 @@ class TableActivity: AppCompatActivity() {
 
         val statPosition = intent.getIntExtra("statistic_number", -1)
         statistic = (application as Application).statistics[statPosition]!!
-        variableNames = statistic.variable_names
-        variableTypes = statistic.variable_types
-        data = statistic.data
+        variables = statistic.variables
+        data.addAll(statistic.data)
         title = statistic.name
 
         arrayOfSizes = getMaxSizes()
@@ -113,16 +112,21 @@ class TableActivity: AppCompatActivity() {
 
         pickerTextView.setOnClickListener { showVariantPickerDialog() }
 
-        variablePlaceholder.adapter = VariablePlaceholderAdapter(variableNames, arrayOfSizes)
+        variablePlaceholder.adapter = VariablePlaceholderAdapter(variables, arrayOfSizes)
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         variablePlaceholder.layoutManager = layoutManager
 
-        notePlaceholder.adapter = NotePlaceholderAdapter(data, convertToPx(layoutHeight))
+        val noteAdapter = object : NotePlaceholderAdapter(data, convertToPx(layoutHeight)) {
+            override fun onAddNoteButtonClick() {
+                addNote()
+            }
+        }
+        notePlaceholder.adapter = noteAdapter
         notePlaceholder.layoutManager = LinearLayoutManager(this)
         notePlaceholder.addOnScrollListener(verticalScrollListener)
 
-        dataPlaceholder.adapter = DataPlaceholderAdapter(data, this, arrayOfSizes, horizontalScrollListener)
+        dataPlaceholder.adapter = DataPlaceholderAdapter(data, this, arrayOfSizes)
         dataPlaceholder.layoutManager = LinearLayoutManager(this)
         dataPlaceholder.addOnScrollListener(verticalScrollListener)
 
@@ -136,6 +140,18 @@ class TableActivity: AppCompatActivity() {
         notePlaceholder.setOnScrollStoppedListener(stoppedListener)
         variablePlaceholder.setOnScrollStoppedListener(stoppedListener)
         notePlaceholder.isHorizontal = false
+
+        dataPlaceholder.addOnChildAttachStateChangeListener(object: RecyclerView.OnChildAttachStateChangeListener {
+            override fun onChildViewDetachedFromWindow(view: View) {
+            }
+
+            override fun onChildViewAttachedToWindow(view: View) {
+                val holder = dataPlaceholder.getChildViewHolder(view) as DataPlaceholderAdapter.ViewHolder
+                holder.row.clearOnScrollListeners()
+                holder.row.scrollToPosition(recViewPosition)
+                holder.row.addOnScrollListener(horizontalScrollListener)
+            }
+        })
 
     }
 
@@ -155,28 +171,13 @@ class TableActivity: AppCompatActivity() {
         return true
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        dataPlaceholder.addOnChildAttachStateChangeListener(object: RecyclerView.OnChildAttachStateChangeListener {
-            override fun onChildViewDetachedFromWindow(view: View) {
-            }
-
-            override fun onChildViewAttachedToWindow(view: View) {
-                val holder = dataPlaceholder.getChildViewHolder(view) as DataPlaceholderAdapter.ViewHolder
-                holder.row.clearOnScrollListeners()
-                holder.row.scrollToPosition(recViewPosition)
-                holder.row.addOnScrollListener(horizontalScrollListener)
-            }
-        })
-    }
-
     private fun getViewFromData(notePosition: Int, variablePosition: Int): TextView {
         val noteView = dataPlaceholder.findViewHolderForAdapterPosition(notePosition) as DataPlaceholderAdapter.ViewHolder
         return (noteView.row.findViewHolderForAdapterPosition(variablePosition) as DataPlaceHolderItemAdapter.ViewHolder).textView
     }
 
     private fun getMaxSizes(): ArrayList<Int> {
-        val sizes = variableNames.mapTo(ArrayList(), { it.length })
+        val sizes = variables.mapTo(ArrayList(), { it.name.length })
         val columnCount = sizes.size
 
         for (i in 0 until data.size) {
@@ -361,7 +362,7 @@ class TableActivity: AppCompatActivity() {
     }
 
     fun attachToNavigator() {
-        if (variableTypes[selectedView.variablePosition]!!.type == "classified") {
+        if (variables[selectedView.variablePosition]!!.type!!.type == "classified") {
             navigatorTextField.setTextViewVisible(selectedView.view!!.text)
         }
         else {
@@ -369,7 +370,7 @@ class TableActivity: AppCompatActivity() {
             pickerEditText.inputType = InputType.TYPE_CLASS_NUMBER
         }
 
-        pickedVariable.text = variableNames[selectedView.variablePosition]
+        pickedVariable.text = variables[selectedView.variablePosition]!!.name
         pickedNote.text = selectedView.notePosition.plus(1).toString()
     }
 
@@ -381,23 +382,92 @@ class TableActivity: AppCompatActivity() {
     }
 
     fun showVariantPickerDialog() {
-        val dialog = VariantChooserDialog(variableTypes[selectedView.variablePosition]!!.variants, this, pickerTextView)
+        val dialog = VariantChooserDialog(variables[selectedView.variablePosition]!!.type!!.variants, variables[selectedView.variablePosition]!!.name,this, pickerTextView)
         dialog.show()
     }
 
     fun onNavigatorButtonClick(v: View) {
         if (selectedView.view == null) return
 
-        selectedView.view!!.text = navigatorTextField.getText()
+        if (selectedView.view!!.text != navigatorTextField.getText()) {
+            selectedView.view!!.text = navigatorTextField.getText()
+            addChange()
+        }
+
         selectNext()
     }
 
     fun selectNext() {
-        if (selectedView.variablePosition < variableNames.size - 1) selectViewAtPosition(selectedView.notePosition, selectedView.variablePosition + 1)
-        else if (selectedView.notePosition < data.size - 1) selectViewAtPosition(selectedView.notePosition + 1, 0)
-        else {
-            //TODO(show note dialog)
+        if (selectedView.variablePosition < variables.size - 1) {
+            log("selecting next variable")
+            selectViewAtPosition(selectedView.notePosition, selectedView.variablePosition + 1)
         }
+        else if (selectedView.notePosition < data.size - 1) {
+            log("selecting view at next note")
+            selectViewAtPosition(selectedView.notePosition + 1, 0)
+        }
+        else {
+            log("making new note")
+            addNote()
+        }
+    }
+
+    fun addChange() {
+        for (change in changes) {
+            if (!(change.varPosition == selectedView.variablePosition && change.notePosition == selectedView.notePosition)) continue
+            else {
+                change.buffer = selectedView.view!!.text.toString()
+                return
+            }
+        }
+        changes.add(DataChange(selectedView.view!!.text.toString(), selectedView.notePosition, selectedView.variablePosition))
+    }
+
+    fun addNote() {
+        val dialog = YouChooseDialog(getString(R.string.do_you_want_to_add_note), getString(R.string.yes), getString(R.string.no))
+        dialog.dialogEventHandler = object : YouChooseDialog.DialogClickListener {
+            override fun onNegativeButtonClick() {
+            }
+
+            override fun onPositiveButtonClick() {
+                onAddNoteDialogPositive()
+            }
+        }
+        dialog.show(supportFragmentManager, "addNote")
+    }
+
+    fun onAddNoteDialogPositive() {
+        val position = dataPlaceholder.adapter!!.itemCount - 1
+        log("adding note at position = $position")
+        actions.add(Action("addNote", position))
+        data.add(getEmptyNote(variables.size))
+        notePlaceholder.adapter!!.notifyItemInserted(position)
+        dataPlaceholder.adapter!!.notifyItemInserted(position)
+    }
+
+    fun onSave() {
+        Realm.getDefaultInstance().executeTransaction { realm ->
+            for (action in actions) {
+                if (action.actionType == "addNote") {
+                    statistic.data.add(getEmptyNote(variables.size))
+                }
+                else if (action.actionType == "deleteNote") {
+                    statistic.data.removeAt(action.notePosition)
+                    for (change in changes) {
+                        if (change.notePosition == action.notePosition) changes.remove(change)
+                    }
+                }
+            }
+            for (change in changes) {
+                statistic.data[change.notePosition]!!.note[change.varPosition] = change.buffer
+            }
+            actions.clear()
+            changes.clear()
+        }
+    }
+
+    fun onCancel() {
+
     }
 
     class SelectedView(var view: TextView? = null, var variablePosition: Int = 0, var notePosition: Int = 0)
@@ -444,5 +514,8 @@ class TableActivity: AppCompatActivity() {
             return !(n1pos > notePosition || n2pos < notePosition)
         }
     }
+
+    class DataChange(var buffer: String, val notePosition: Int, val varPosition: Int)
+    class Action(val actionType: String, val notePosition: Int)
 
 }

@@ -46,7 +46,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <com.example.pocketstatistician.convenience.NavigatorView
         android:id="@+id/gesture_detector"
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -99,7 +99,7 @@
                 android:id="@+id/picker_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6"
+                android:layout_weight="5"
                 android:layout_marginHorizontal="8dp"
                 android:inputType="none"
                 android:background="@drawable/rounded_corner"
@@ -111,7 +111,7 @@
                 android:id="@+id/picker_text_view"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6"
+                android:layout_weight="5"
                 android:layout_marginHorizontal="8dp"
                 android:background="@drawable/rounded_corner"
                 android:textSize="20sp"
@@ -131,6 +131,6 @@
 
         </LinearLayout>
         
-    </LinearLayout>
+    </com.example.pocketstatistician.convenience.NavigatorView>
 
 </FrameLayout>

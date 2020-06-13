@@ -34,7 +34,7 @@ class NavigationGestureDetector(private val activity: TableActivity): GestureDet
     }
 
     private fun moveRight(newNotePosition: Int, newVariablePosition: Int) {
-        if (newVariablePosition >= activity.statistic.variable_names.size) return
+        if (newVariablePosition >= activity.statistic.variables.size) return
         activity.recViewPosition = newVariablePosition
         activity.selectViewAtPosition(newNotePosition, newVariablePosition)
     }

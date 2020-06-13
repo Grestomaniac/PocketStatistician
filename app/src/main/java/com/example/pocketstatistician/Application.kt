@@ -3,9 +3,8 @@ package com.example.pocketstatistician
 import android.app.Application
 import android.content.Context
 import com.example.pocketstatistician.convenience.log
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import io.realm.RealmResults
+import io.realm.*
+import io.realm.exceptions.RealmMigrationNeededException
 
 class Application: Application() {
 
@@ -15,8 +14,12 @@ class Application: Application() {
     override fun onCreate() {
         super.onCreate()
         Realm.init(this)
+        deleteRealm()
+        val config = RealmConfiguration.Builder().name("default.realm").schemaVersion(1).migration(ApplicationRealmMigration()).build()
+        Realm.setDefaultConfiguration(config)
         types = loadTypes()
         statistics = loadStatistics()
+
     }
 
     private fun loadTypes(): RealmResults<Type> {
@@ -74,6 +77,17 @@ class Application: Application() {
         val realmDefaultConfig = Realm.getDefaultConfiguration()
         if (realmDefaultConfig != null)
             Realm.deleteRealm(realmDefaultConfig)
+    }
+
+    class ApplicationRealmMigration: RealmMigration {
+        override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
+            val schema = realm.schema
+
+            if (oldVersion == 0L) {
+                schema.get("Statistic")!!.addRealmListField("questions", String::class.java)
+            }
+        }
+
     }
 
 }

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp">
+    android:paddingVertical="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,17 +10,23 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sample"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:text="Some question"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="#ff260040"
+            android:paddingHorizontal="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/headline"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
+            android:layout_marginHorizontal="20dp"
             android:weightSum="100">
 
             <EditText
@@ -29,14 +35,15 @@
                 android:layout_height="40dp"
                 android:layout_weight="100"
                 android:layout_marginEnd="5dp"
-                android:background="#ffffff"
+                android:background="@drawable/accented_rounded"
                 android:inputType="text" />
 
             <ImageView
                 android:id="@+id/searchIcon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_search_black_36dp" />
+                android:src="@drawable/ic_search_black_36dp"
+                android:contentDescription="@string/search_icon_description"/>
 
         </LinearLayout>
 
@@ -50,7 +57,7 @@
             android:id="@+id/dialog_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"/>
+            android:layout_margin="10dp" />
     </RelativeLayout>
 
 </LinearLayout>

@@ -4,19 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.Note
 import com.example.pocketstatistician.R
-import com.example.pocketstatistician.Type
-import com.example.pocketstatistician.activities.MainActivity
+import com.example.pocketstatistician.Variable
 import com.example.pocketstatistician.adapters.NoteAdapter
-import com.example.pocketstatistician.convenience.NoteDialog
 import io.realm.RealmList
 
-class NoteFragment(val variableTypes: RealmList<Type>, val note: Note, val variableNames: RealmList<String>): Fragment() {
+class NoteFragment(val variables: RealmList<Variable>, val note: Note): Fragment() {
 
     lateinit var items: RecyclerView
 
@@ -28,7 +25,7 @@ class NoteFragment(val variableTypes: RealmList<Type>, val note: Note, val varia
         super.onActivityCreated(savedInstanceState)
 
         items = view!!.findViewById(R.id.items)
-        val adapter = NoteAdapter(variableTypes, variableNames, note, context!!)
+        val adapter = NoteAdapter(variables, note, context!!)
 
         items.adapter = adapter
         items.layoutManager = LinearLayoutManager(context)

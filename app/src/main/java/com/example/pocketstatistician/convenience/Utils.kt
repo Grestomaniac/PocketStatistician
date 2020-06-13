@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.pocketstatistician.Note
 import com.example.pocketstatistician.R
 
 fun isInteger(str: String?, context: Context): Boolean {
@@ -35,6 +36,12 @@ fun show(where: Context, what: String) {
 
 fun log(input: String) {
     Log.d("Abrakadabra", input)
+}
+
+fun getEmptyNote(size: Int): Note {
+    val emptyNote = Note()
+    emptyNote.note.addAll(Array(size) { "" })
+    return emptyNote
 }
 
 /*class NoVariablesAlertDialog(): DialogFragment() {

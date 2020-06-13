@@ -37,7 +37,8 @@ class StatisticsMenuActivity: AppCompatActivity() {
     }
 
     fun onAnalyzeButtonClick(v: View) {
-
+        val newIntent = Intent(this, Statistic::class.java)
+        sendIntentToActivity(newIntent)
     }
 
     fun onEditButtonClick(v: View) {

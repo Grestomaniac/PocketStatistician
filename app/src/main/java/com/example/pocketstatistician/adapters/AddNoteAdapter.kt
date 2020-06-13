@@ -10,12 +10,11 @@ import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
 
 class AddNoteAdapter(statistic: Statistic, val context: Context): RecyclerView.Adapter<AddNoteAdapter.ViewHolder>() {
-    private val variables = statistic.variable_types
-    private val variableNames = statistic.variable_names
+    private val variables = statistic.variables
     private var index = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val variableType = variables[index++]!!.type
+        val variableType = variables[index++]!!.type!!.type
 
         return when (variableType) {
             "classified" -> {
@@ -34,10 +33,10 @@ class AddNoteAdapter(statistic: Statistic, val context: Context): RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.variableName.text = variableNames[position]
+        holder.variableName.text = variables[position]!!.name
         if (holder.type == "classified") {
             val spinner = (holder as ClassifiedViewHolder).spinnerWithVariants
-            val variants = variables[position]!!.variants
+            val variants = variables[position]!!.type!!.variants
 
             val spinnerAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, variants)
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
