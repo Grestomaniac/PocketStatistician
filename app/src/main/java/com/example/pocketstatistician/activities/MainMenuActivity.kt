@@ -4,24 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.example.pocketstatistician.Application
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
 import com.example.pocketstatistician.Type
-import com.example.pocketstatistician.adapters.menu.StatisticItemAdapter
+import com.example.pocketstatistician.adapters.menu.MenuPagerAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import io.realm.RealmResults
 
-class MainMenuActivity: AppCompatActivity() {
+class MainMenuActivity: FragmentActivity() {
 
     lateinit var typesList: RealmResults<Type>
     lateinit var statisticsList: RealmResults<Statistic>
-    lateinit var label: TextView
-    lateinit var recyclerView: RecyclerView
-    lateinit var adapter: StatisticItemAdapter
+    lateinit var viewPager: ViewPager2
+    lateinit var tab: TabLayout
+    private var statisticTabSelected = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,21 +30,29 @@ class MainMenuActivity: AppCompatActivity() {
         statisticsList = (application as Application).statistics
         typesList = (application as Application).types
 
-        label = findViewById(R.id.label)
+        viewPager = findViewById(R.id.menu_container)
+        tab = findViewById(R.id.menu_tab)
 
-        recyclerView = findViewById(R.id.list_of_items)
-
-        adapter = StatisticItemAdapter(statisticsList)
-        adapter.onEntryClickListener = object : StatisticItemAdapter.OnEntryClickListener {
-            override fun onEntryClick(view: View, position: Int) {
-                val intent = Intent(this@MainMenuActivity, StatisticsMenuActivity::class.java)
-                intent.putExtra("statistic_number", position)
-                startActivity(intent)
+        tab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
             }
-        }
 
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val tabPosition = tab!!.position
+                statisticTabSelected = tabPosition == 0
+            }
+
+        })
+
+        viewPager.adapter = MenuPagerAdapter(this, statisticsList, typesList)
+
+        TabLayoutMediator(tab, viewPager) { tab, position ->
+            tab.text = if (position == 0) getString(R.string.statistics) else getString(R.string.types)
+        }.attach()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -52,14 +60,10 @@ class MainMenuActivity: AppCompatActivity() {
         return true
     }
 
-    override fun onResume() {
-        super.onResume()
-        adapter.notifyDataSetChanged()
-        label.text = getString(R.string.statistics_count, statisticsList.size)
-    }
-
     fun onFloatingButtonClick(v: View) {
-        val intent = Intent(this, StatisticEditorActivity::class.java)
+        val intent = if (statisticTabSelected) Intent(this, StatisticEditorActivity::class.java)
+        else Intent(this, TypeEditorActivity::class.java)
+
         startActivity(intent)
     }
 }

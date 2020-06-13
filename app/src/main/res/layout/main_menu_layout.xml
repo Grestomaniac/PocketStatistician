@@ -13,24 +13,18 @@
         android:backgroundTint="@color/colorInputHead"
         />
 
-    <LinearLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/menu_tab"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/menu_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_marginTop="50dp"
         android:background="@color/colorTableTop">
 
-        <TextView
-            android:id="@+id/label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/headline_style"
-            android:background="@drawable/header"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_of_items"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
+    </androidx.viewpager2.widget.ViewPager2>
 
 </FrameLayout>

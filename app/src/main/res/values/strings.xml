@@ -61,9 +61,10 @@
     <string name="variable_value">Переменная:</string>
     <string name="action_settings">Настройки</string>
 
-    <string name="statistics_count">%1$d статистик</string>
-    <string name="note_count">%1$d записей</string>
-    <string name="variant_count">%1$d вариантов</string>
+    <string name="statistics_quantity">%1$d статистик</string>
+    <string name="types_quantity">%1$d типов</string>
+    <string name="note_quantity">%1$d записей</string>
+    <string name="variant_quantity">%1$d вариантов</string>
 
     <string name="statistic_menu">Меню статистики</string>
     <string name="add_note_header">%1$s с %2$d записями</string>
@@ -81,5 +82,8 @@
 
     <string name="edit_or_not">Внимание, все данные связанные с этой переменной будут удалены</string>
     <string name="continue_anyway">Продолжить</string>
+
+    <string name="statistics">Статистики</string>
+    <string name="types">Типы</string>
 
 </resources>
