@@ -8,11 +8,10 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.R
-import com.example.pocketstatistician.activities.StatisticEditor
+import com.example.pocketstatistician.activities.StatisticEditorActivity
 import com.example.pocketstatistician.convenience.YouChooseDialog
-import io.realm.RealmList
 
-class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditor.VariableData>, private val context: Context): RecyclerView.Adapter<ListOfValuesAdapter.ViewHolder>() {
+class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivity.VariableData>, private val context: Context): RecyclerView.Adapter<ListOfValuesAdapter.ViewHolder>() {
 
     var onEntryClickListener: OnEntryClickListener? = null
 

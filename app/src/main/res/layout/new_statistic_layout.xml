@@ -37,7 +37,7 @@
             android:weightSum="100">
 
             <EditText
-                android:id="@+id/variables_count"
+                android:id="@+id/variant_count"
                 android:layout_weight="80"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/list_of_variables"
+                    android:id="@+id/list_of_variants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"/>

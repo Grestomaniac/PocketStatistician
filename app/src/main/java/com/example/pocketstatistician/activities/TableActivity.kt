@@ -98,7 +98,7 @@ class TableActivity: AppCompatActivity() {
             mDetector.onTouchEvent(event)
         }
 
-        variablePlaceholder = findViewById(R.id.variable_placeholder)
+        variablePlaceholder = findViewById(R.id.variant_placeholder)
         notePlaceholder = findViewById(R.id.note_placeholder)
         dataPlaceholder = findViewById(R.id.data_placeholder)
         pickerEditText = findViewById(R.id.picker_edit_text)

@@ -22,7 +22,7 @@ class StatisticsMenuActivity: AppCompatActivity() {
         val app = application as Application
         statistic = app.statistics[statPosition]!!
 
-        val statName = findViewById<TextView>(R.id.statistic_name)
+        val statName = findViewById<TextView>(R.id.type_name)
         statName.text = statistic.name
     }
 

@@ -5,7 +5,7 @@
     android:background="@color/colorTableTop">
 
     <TextView
-        android:id="@+id/statistic_name"
+        android:id="@+id/type_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/headline_style"/>

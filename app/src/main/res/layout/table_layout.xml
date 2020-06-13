@@ -33,7 +33,7 @@
             android:orientation="vertical">
 
             <com.example.pocketstatistician.convenience.CustomRecyclerView
-                android:id="@+id/variable_placeholder"
+                android:id="@+id/variant_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"/>
 

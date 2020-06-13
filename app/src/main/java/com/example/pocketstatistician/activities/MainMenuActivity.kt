@@ -2,8 +2,6 @@ package com.example.pocketstatistician.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.widget.TextView
@@ -15,9 +13,6 @@ import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
 import com.example.pocketstatistician.Type
 import com.example.pocketstatistician.adapters.menu.StatisticItemAdapter
-import com.example.pocketstatistician.convenience.log
-import com.example.pocketstatistician.convenience.show
-import io.realm.Realm
 import io.realm.RealmResults
 
 class MainMenuActivity: AppCompatActivity() {
@@ -61,5 +56,10 @@ class MainMenuActivity: AppCompatActivity() {
         super.onResume()
         adapter.notifyDataSetChanged()
         label.text = getString(R.string.statistics_count, statisticsList.size)
+    }
+
+    fun onFloatingButtonClick(v: View) {
+        val intent = Intent(this, StatisticEditorActivity::class.java)
+        startActivity(intent)
     }
 }

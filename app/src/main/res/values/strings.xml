@@ -13,6 +13,9 @@
     <string name="variable_type">Тип переменной</string>
     <string name="variants_count">Количество вариантов</string>
     <string name="variant">Вариант</string>
+    <string name="variants">Варианты</string>
+
+    <string name="type_name">Название переменной</string>
     
     <string-array name="variable_types">
         <item>Регрессионный</item>

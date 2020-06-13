@@ -3,6 +3,7 @@ package com.example.pocketstatistician.activities
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,13 +12,14 @@ import com.example.pocketstatistician.*
 import com.example.pocketstatistician.adapters.ListOfValuesAdapter
 import com.example.pocketstatistician.convenience.VariantChooserDialog
 import com.example.pocketstatistician.convenience.isInteger
+import com.example.pocketstatistician.convenience.log
 import com.example.pocketstatistician.convenience.show
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmResults
 import kotlin.math.abs
 
-class StatisticEditor(): AppCompatActivity() {
+class StatisticEditorActivity: AppCompatActivity() {
 
     private lateinit var variablesCount: EditText
     private lateinit var statisticList: RealmResults<Statistic>
@@ -25,6 +27,9 @@ class StatisticEditor(): AppCompatActivity() {
     lateinit var listOfVariables: RecyclerView
     lateinit var variablesAdapter: ListOfValuesAdapter
     lateinit var statisticName: EditText
+    lateinit var variablePlaceholder: LinearLayout
+    lateinit var quantityChooser: LinearLayout
+
     private val variables = ArrayList<VariableData>()
     private var statisticPosition = -1
 
@@ -32,13 +37,16 @@ class StatisticEditor(): AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.statistic_editor_layout)
 
-        variablesCount = findViewById(R.id.variables_count)
-        statisticName = findViewById(R.id.statistic_name)
-        listOfVariables = findViewById(R.id.list_of_variables)
+        variablesCount = findViewById(R.id.variant_count)
+        statisticName = findViewById(R.id.type_name)
+        listOfVariables = findViewById(R.id.list_of_variants)
+        variablePlaceholder = findViewById(R.id.variant_placeholder)
+        quantityChooser = findViewById(R.id.quantity_chooser)
 
         statisticList = (application as Application).statistics
         typeList = (application as Application).types
         statisticPosition = intent.getIntExtra("", -1)
+
         if (statisticPosition != -1) {
             val statistic = statisticList[statisticPosition]
             statisticName.setText(statistic!!.name)
@@ -48,6 +56,8 @@ class StatisticEditor(): AppCompatActivity() {
                 val variable = statistic.variables[i]!!
                 variables.add(VariableData(variable, true))
             }
+            variablePlaceholder.visibility = View.VISIBLE
+            quantityChooser.visibility = View.GONE
         }
         val types = typeList.mapTo(RealmList(), { it.name })
 
@@ -55,13 +65,22 @@ class StatisticEditor(): AppCompatActivity() {
 
         variablesAdapter.onEntryClickListener = object: ListOfValuesAdapter.OnEntryClickListener {
             override fun onEntryClick(view: TextView, position: Int) {
-                VariantChooserDialog(types, variables[position].variable.name,this@StatisticEditor, view).show()
+                VariantChooserDialog(types, variables[position].variable.name,this@StatisticEditorActivity, view).show()
                 variables[position].variable.type!!.name = view.text.toString()
             }
         }
 
         listOfVariables.adapter = variablesAdapter
         listOfVariables.layoutManager = LinearLayoutManager(this)
+
+        listOfVariables.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
+            override fun onChildViewDetachedFromWindow(view: View) {
+            }
+
+            override fun onChildViewAttachedToWindow(view: View) {
+                log("attached view at ${listOfVariables.getChildAdapterPosition(view)}")
+            }
+        })
     }
 
     fun onCountButtonClick(v: View) {
@@ -77,19 +96,8 @@ class StatisticEditor(): AppCompatActivity() {
             return
         }
 
-        val difference = countInt - variablesAdapter.itemCount
-
-        if (difference > 0) {
-            for (i in 0 until difference) variables.add(VariableData())
-            variablesAdapter.notifyItemRangeInserted(variablesAdapter.itemCount, difference)
-        }
-
-        else if (difference < 0) {
-            for (i in 0 until abs(difference)){
-                variables.removeAt(variables.lastIndex)
-            }
-            variablesAdapter.notifyItemRangeRemoved(variablesAdapter.itemCount + difference, abs(difference))
-        }
+        quantityChooser.visibility = View.GONE
+        variablePlaceholder.visibility = View.VISIBLE
     }
 
     fun onSaveButtonClick(v: View) {

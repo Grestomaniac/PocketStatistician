@@ -24,7 +24,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/statistics_editor_name"
+                    android:text="@string/type"
                     android:textSize="20sp"
                     android:padding="7dp"
                     android:background="@drawable/input_head"
@@ -38,6 +38,7 @@
                     android:autofillHints="untitled"
                     android:padding="7dp"
                     android:paddingHorizontal="10dp"
+                    android:layout_marginBottom="7dp"
                     android:background="@drawable/input_foot"
                     />
             </LinearLayout>
@@ -48,11 +49,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginBottom="7dp">
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/statistics_editor_count"
+                    android:text="@string/variants_count"
                     android:padding="7dp"
                     android:textSize="20sp"
                     android:background="@drawable/input_head"/>
@@ -91,28 +91,16 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="6dp"
+                    android:textSize="20sp"
                     android:weightSum="100"
+                    android:text="@string/variants"
                     android:background="@drawable/input_head">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="50"
-                        android:text="@string/variable_name"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="50"
-                        android:text="@string/type"
-                        android:gravity="center"/>
-
-                </LinearLayout>
+                </TextView>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
