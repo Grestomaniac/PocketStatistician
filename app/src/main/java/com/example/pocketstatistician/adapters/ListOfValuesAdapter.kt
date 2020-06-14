@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,8 @@ class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (variables[position].isDefault) {
+            holder.itemView.background = context.getDrawable(R.drawable.default_rounded)
+
             holder.variableType.text = variables[position].type.name
             holder.variableType.setOnClickListener {
                 val dialog = YouChooseDialog(context.getString(R.string.edit_or_not), context.getString(R.string.continue_anyway), context.getString(R.string.cancel))
@@ -33,6 +36,7 @@ class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivi
                     override fun onPositiveButtonClick() {
                         holder.variableType.setOnClickListener(holder)
                         variables[position].isDefault = false
+                        holder.itemView.background = context.getDrawable(R.drawable.item_name)
                     }
 
                     override fun onNegativeButtonClick() {
@@ -44,6 +48,8 @@ class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivi
         }
 
         else {
+            holder.itemView.background = context.getDrawable(R.drawable.item_name)
+
             holder.variableType.text = if (variables[position].type.name.isBlank()) context.getString(R.string.nothing_is_chosen)
             else variables[position].type.name
 
@@ -55,6 +61,14 @@ class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivi
                 variables[position].name = holder.variableName.text.toString()
             }
         }
+
+        holder.variableName.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                holder.variableName.clearFocus()
+            }
+            false
+        }
+        if (position == itemCount-1) holder.variableName.imeOptions = EditorInfo.IME_ACTION_DONE
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {

@@ -24,7 +24,7 @@ class AddNoteActivity: FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.add_note_layout)
 
-        val statPosition = intent.getIntExtra("statistic_number", -1)
+        val statPosition = intent.getIntExtra("statistic_position", -1)
         statistic = (application as Application).statistics[statPosition]!!
 
         val header1 = findViewById<TextView>(R.id.header_1)

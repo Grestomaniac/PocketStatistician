@@ -33,11 +33,13 @@
         <activity android:name=".activities.TableActivity">
         </activity>
 
-        <activity android:name=".activities.StatisticEditorActivity">
+        <activity android:name=".activities.StatisticEditorActivity"
+            >
 
         </activity>
 
-        <activity android:name=".activities.TypeEditorActivity">
+        <activity android:name=".activities.TypeEditorActivity"
+            >
 
         </activity>
 

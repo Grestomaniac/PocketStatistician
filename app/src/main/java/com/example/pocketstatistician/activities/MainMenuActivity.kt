@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.pocketstatistician.Application
@@ -11,14 +12,13 @@ import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
 import com.example.pocketstatistician.Type
 import com.example.pocketstatistician.adapters.menu.MenuPagerAdapter
+import com.example.pocketstatistician.convenience.log
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import io.realm.RealmResults
 
-class MainMenuActivity: FragmentActivity() {
+class MainMenuActivity: AppCompatActivity() {
 
-    lateinit var typesList: RealmResults<Type>
-    lateinit var statisticsList: RealmResults<Statistic>
     lateinit var viewPager: ViewPager2
     lateinit var tab: TabLayout
     private var statisticTabSelected = true
@@ -26,9 +26,6 @@ class MainMenuActivity: FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_menu_layout)
-
-        statisticsList = (application as Application).statistics
-        typesList = (application as Application).types
 
         viewPager = findViewById(R.id.menu_container)
         tab = findViewById(R.id.menu_tab)
@@ -47,7 +44,7 @@ class MainMenuActivity: FragmentActivity() {
 
         })
 
-        viewPager.adapter = MenuPagerAdapter(this, statisticsList, typesList)
+        viewPager.adapter = MenuPagerAdapter(this)
 
         TabLayoutMediator(tab, viewPager) { tab, position ->
             tab.text = if (position == 0) getString(R.string.statistics) else getString(R.string.types)

@@ -7,7 +7,6 @@ import io.realm.annotations.Required
 import java.lang.reflect.Array
 
 open class Type(
-    @PrimaryKey @Required
     var name: String = "",
     var type: String  = "",
     var variants: RealmList<String> = RealmList()
@@ -20,7 +19,6 @@ open class Variable(
 ): RealmObject()
 
 open class Statistic(
-    @PrimaryKey @Required
     var name: String = "",
     var variables: RealmList<Variable> = RealmList(),
     var data: RealmList<Note> = RealmList()

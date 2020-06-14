@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -27,7 +27,7 @@
         <item name="android:padding">7dp</item>
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:textColor">#000000</item>
-        <item name="android:background">@drawable/headline</item>
+        <item name="android:background">@drawable/header</item>
     </style>
 
     <style name="rounded_basic_style">

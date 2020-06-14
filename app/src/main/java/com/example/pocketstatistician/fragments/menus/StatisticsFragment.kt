@@ -9,17 +9,18 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pocketstatistician.Application
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
 import com.example.pocketstatistician.activities.StatisticsMenuActivity
 import com.example.pocketstatistician.adapters.menu.StatisticItemAdapter
 import io.realm.RealmResults
 
-class StatisticsFragment(val statistics: RealmResults<Statistic>): Fragment() {
+class StatisticsFragment: Fragment() {
 
-    lateinit var label: TextView
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: StatisticItemAdapter
+    lateinit var statistics: RealmResults<Statistic>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.menu_fragment_layout, container, false)
@@ -28,9 +29,8 @@ class StatisticsFragment(val statistics: RealmResults<Statistic>): Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        label = view!!.findViewById(R.id.label)
-
         recyclerView = view!!.findViewById(R.id.list_of_items)
+        statistics = (activity!!.application as Application).statistics
 
         adapter = StatisticItemAdapter(statistics)
         adapter.onEntryClickListener = object : StatisticItemAdapter.OnEntryClickListener {
@@ -48,6 +48,5 @@ class StatisticsFragment(val statistics: RealmResults<Statistic>): Fragment() {
     override fun onResume() {
         super.onResume()
         adapter.notifyDataSetChanged()
-        label.text = getString(R.string.statistics_quantity, statistics.size)
     }
 }

@@ -9,6 +9,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="15dp">
+
+        <EditText
+            android:id="@+id/searchBox"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="5dp"
+            android:paddingHorizontal="7dp"
+            android:background="@drawable/accented_rounded"
+            android:inputType="text"
+            android:maxLines="1"
+            android:imeOptions="actionSearch"/>
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:src="@drawable/ic_search_black_36dp"
+            android:contentDescription="@string/search_icon_description"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -20,41 +51,15 @@
             android:textStyle="bold"
             android:textColor="#ff260040"
             android:paddingHorizontal="10dp"
-            android:layout_marginBottom="10dp"
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/headline"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="10dp"
-            android:weightSum="100">
-
-            <EditText
-                android:id="@+id/searchBox"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="100"
-                android:layout_marginEnd="5dp"
-                android:background="@drawable/accented_rounded"
-                android:inputType="text" />
-
-            <ImageView
-                android:id="@+id/searchIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_search_black_36dp"
-                android:contentDescription="@string/search_icon_description"/>
-
-        </LinearLayout>
 
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/dialog_list"

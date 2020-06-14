@@ -3,20 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:onClick="onFloatingButtonClick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="20dp"
-        android:src="@drawable/ic_add_black_24dp"
-        android:backgroundTint="@color/colorInputHead"
-        />
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/menu_tab"
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:layout_height="50dp"
+        android:background="@drawable/header"
+        android:layout_marginBottom="7dp"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/menu_container"
@@ -26,5 +18,15 @@
         android:background="@color/colorTableTop">
 
     </androidx.viewpager2.widget.ViewPager2>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:onClick="onFloatingButtonClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_add_black_24dp"
+        android:backgroundTint="@color/colorInputHead"
+        />
 
 </FrameLayout>

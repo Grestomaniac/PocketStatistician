@@ -14,7 +14,6 @@ class Application: Application() {
     override fun onCreate() {
         super.onCreate()
         Realm.init(this)
-        deleteRealm()
         val config = RealmConfiguration.Builder().name("default.realm").schemaVersion(1).migration(ApplicationRealmMigration()).build()
         Realm.setDefaultConfiguration(config)
         types = loadTypes()

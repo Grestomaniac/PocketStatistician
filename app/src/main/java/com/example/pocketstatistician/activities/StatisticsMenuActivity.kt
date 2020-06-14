@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.pocketstatistician.Application
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Statistic
+import com.example.pocketstatistician.convenience.YouChooseDialog
+import io.realm.Realm
 
 class StatisticsMenuActivity: AppCompatActivity() {
 
@@ -17,13 +19,12 @@ class StatisticsMenuActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.statistic_menu_layout)
-        statPosition = intent.getIntExtra("statistic_number", 0)
+        statPosition = intent.getIntExtra("statistic_number", -1)
 
         val app = application as Application
         statistic = app.statistics[statPosition]!!
 
-        val statName = findViewById<TextView>(R.id.type_name)
-        statName.text = statistic.name
+        title = statistic.name
     }
 
     fun onAddButtonClick(v: View) {
@@ -46,11 +47,24 @@ class StatisticsMenuActivity: AppCompatActivity() {
     }
 
     fun onDeleteButtonClick(v: View) {
+        val dialog = YouChooseDialog(getString(R.string.delete_anyway), getString(R.string.yes), getString(R.string.no))
+        dialog.dialogEventHandler = object : YouChooseDialog.DialogClickListener {
+            override fun onPositiveButtonClick() {
+                Realm.getDefaultInstance().executeTransaction { realm ->
+                    statistic.deleteFromRealm()
+                }
+                finish()
+            }
 
+            override fun onNegativeButtonClick() {
+            }
+
+        }
+        dialog.show(supportFragmentManager, "delete_statistic")
     }
 
     private fun sendIntentToActivity(newIntent: Intent) {
-        newIntent.putExtra("statistic_number", statPosition)
+        newIntent.putExtra("statistic_position", statPosition)
         startActivity(newIntent)
     }
 }

@@ -1,7 +1,11 @@
 package com.example.pocketstatistician.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.*
 import com.example.pocketstatistician.adapters.VariantAdapter
+import com.example.pocketstatistician.convenience.YouChooseDialog
 import com.example.pocketstatistician.convenience.isInteger
 import com.example.pocketstatistician.convenience.show
 import io.realm.Realm
@@ -29,7 +34,7 @@ class TypeEditorActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.statistic_editor_layout)
+        setContentView(R.layout.type_editor_layout)
 
         variantsCount = findViewById(R.id.variant_count)
         typeName = findViewById(R.id.type_name)
@@ -38,7 +43,7 @@ class TypeEditorActivity: AppCompatActivity() {
         quantityChooser = findViewById(R.id.quantity_chooser)
 
         typeList = (application as Application).types
-        typePosition = intent.getIntExtra("", -1)
+        typePosition = intent.getIntExtra("type_position", -1)
 
         if (typePosition != -1) {
             val type = typeList[typePosition]
@@ -49,30 +54,32 @@ class TypeEditorActivity: AppCompatActivity() {
 
             variants.addAll(oldVariants.mapTo(ArrayList(), { VariantData(it, true) }))
             variantPlaceholder.visibility = View.VISIBLE
+            quantityChooser.visibility = View.GONE
         }
 
         variantAdapter = VariantAdapter(variants, this)
 
         variantAdapter.onEntryClickListener = object: VariantAdapter.OnEntryClickListener {
             override fun onEntryClick(view: View, position: Int) {
-
+                variants.removeAt(position)
+                variantAdapter.notifyItemRemoved(position)
+                variantAdapter.notifyItemRangeChanged(position, variantAdapter.itemCount - position)
             }
         }
 
         listOfVariants.adapter = variantAdapter
         listOfVariants.layoutManager = LinearLayoutManager(this)
 
-        listOfVariants.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
-            override fun onChildViewDetachedFromWindow(view: View) {
+        variantsCount.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                currentFocus?.clearFocus()
+                onCountButtonClick(v)
             }
-
-            override fun onChildViewAttachedToWindow(view: View) {
-            }
-        })
+            false
+        }
     }
 
     fun onCountButtonClick(v: View) {
-
         val count = variantsCount.text.toString()
         if (!isInteger(count, this)) {
             show(this, getString(R.string.not_int))
@@ -84,14 +91,22 @@ class TypeEditorActivity: AppCompatActivity() {
             return
         }
 
+        for (i in 0 until countInt) variants.add(VariantData())
+        variantAdapter.notifyItemRangeInserted(variantAdapter.itemCount, countInt)
+
         quantityChooser.visibility = View.GONE
         variantPlaceholder.visibility = View.VISIBLE
     }
 
-    fun onSaveButtonClick(v: View) {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.editor_menu, menu)
+        return true
+    }
+
+    fun onSaveButtonClick() {
         val name = typeName.text.toString()
         if (name.isBlank()) {
-            show(this, "Введите название статистики")
+            show(this, getString(R.string.no_name))
             return
         }
 
@@ -99,9 +114,20 @@ class TypeEditorActivity: AppCompatActivity() {
             show(this, "Нужны как минимум 2 переменные")
             return
         }
+        if (!ifVariantsNotBlank()) return
+        if (!variantsHaveUniqueNames()) return
 
         if (typePosition != -1) updateType(name)
         else createType(name)
+
+        title = name
+        variants.forEach { variant -> variant.isDefault = true }
+        variantAdapter.notifyDataSetChanged()
+    }
+
+    fun onAddVariantButtonClick(v: View) {
+        variants.add(VariantData())
+        variantAdapter.notifyItemInserted(variantAdapter.itemCount)
     }
 
     private fun updateType(name: String) {
@@ -110,7 +136,6 @@ class TypeEditorActivity: AppCompatActivity() {
         val blackList = IntArray(statOldVars.size).toMutableList()
 
         for (i in 0 until variants.size) {
-            if (!checkIfDataIsCorrect(i)) return
             val variant = variants[i]
             if (variant.isDefault) {
                 val defaultPos = statOldVars.indexOf(variant.variant)
@@ -123,53 +148,76 @@ class TypeEditorActivity: AppCompatActivity() {
             type.name = name
             type.variants = variants.mapTo(RealmList(), { it.variant })
         }
-        show(this, "$name обновлён")
+        show(this, getString(R.string.updated, name))
     }
 
     private fun createType(name: String) {
 
-        for (i in 0 until variants.size) {
-            if (!checkIfDataIsCorrect(i)) return
-        }
-
         Realm.getDefaultInstance().executeTransaction { realm ->
             realm.copyToRealm(Type(name, "classified", variants.mapTo(RealmList(), { it.variant })))
         }
-        show(this, "$name обновлён")
+        show(this, getString(R.string.created, name))
+        typePosition = typeList.size-1
     }
 
-    private fun checkIfDataIsCorrect(position: Int): Boolean {
-        val variableName = variants[position].variant
-
-        if (variableName.isBlank()) {
-            show(this, getString(R.string.empty_string))
-            return false
-        }
-
-        if (!variantsHaveUniqueNames()) {
-            show(this, getString(R.string.name_is_not_unique))
-            return false
+    private fun ifVariantsNotBlank(): Boolean {
+        for (variant in variants) {
+            if (variant.variant.isBlank()) {
+                show(this, getString(R.string.empty_string))
+                return false
+            }
         }
         return true
     }
 
     private fun variantsHaveUniqueNames(): Boolean {
-        val variantNames = variants.mapTo(ArrayList(), { it.variant })
-        for (variant in variantNames) {
-            if (containsTwice(variant, variantNames)) return false
-            else variantNames.remove(variant)
+        for (i in 0 until variants.size-1) {
+            if (containsTwice(variants[i].variant, i+1)) {
+                show(this, getString(R.string.name_is_not_unique))
+                return false
+            }
         }
         return true
     }
 
-    private fun containsTwice(name: String, names: ArrayList<String>): Boolean {
-        var counter = 0
-        for (i in names) {
-            if (i == name) counter++
-            if (counter > 1) return true
+    private fun containsTwice(name: String, pointer: Int): Boolean {
+        for (i in pointer until variants.size) {
+            if (variants[i].variant == name) return true
         }
         return false
     }
 
-    class VariantData(var variant: String = "", var isDefault: Boolean = false)
+    class VariantData(var variant: String = "", var isDefault: Boolean = false, var haveUniqueName: Boolean = false)
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_settings -> {
+            true
+        }
+
+        R.id.action_save -> {
+            currentFocus?.clearFocus()
+            onSaveButtonClick()
+            true
+        }
+
+        R.id.action_new -> {
+            val dialog = YouChooseDialog(getString(R.string.not_saved_data_will_be_deleted), getString(R.string.yes), getString(R.string.no))
+            dialog.dialogEventHandler = object : YouChooseDialog.DialogClickListener {
+                override fun onPositiveButtonClick() {
+                    val newIntent = Intent(this@TypeEditorActivity, TypeEditorActivity::class.java)
+                    finish()
+                    startActivity(newIntent)
+                }
+
+                override fun onNegativeButtonClick() {
+                }
+            }
+            dialog.show(supportFragmentManager, "create_new")
+            true
+        }
+
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
 }

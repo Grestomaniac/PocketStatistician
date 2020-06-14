@@ -4,5 +4,6 @@
         android:width="1dp"
         android:color="#FF000000"/>
 
-    <solid android:color="@color/colorTableDataSecond"/>
+    <solid android:color="@color/color"/>
+    <corners android:radius="10dp"/>
 </shape>

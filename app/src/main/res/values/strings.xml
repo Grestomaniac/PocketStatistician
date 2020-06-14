@@ -5,7 +5,7 @@
     <string name="statistics_editor_name">Название статистики</string>
     <string name="statistics_editor_count">Количество переменных</string>
     <string name="variable">Переменная %1$d</string>
-    <string name="not_chosen">Переменная не выбрана</string>
+    <string name="not_chosen">Тип не выбран</string>
     <string name="name_is_not_unique">Статистика с таким именем уже существует</string>
 
     <!--NewVariable editor-->
@@ -15,7 +15,7 @@
     <string name="variant">Вариант</string>
     <string name="variants">Варианты</string>
 
-    <string name="type_name">Название переменной</string>
+    <string name="type_name">Название типа</string>
     
     <string-array name="variable_types">
         <item>Регрессионный</item>
@@ -26,6 +26,7 @@
     <string name="empty_string">Вы ввели пустую строку</string>
     <string name="not_int">Это не число</string>
     <string name="not_enough_variables">Нужны как минимум две переменные</string>
+    <string name="not_enough_variants">Нужны как минимум два варианта</string>
     <string name="to_variables_editor">Создать переменные</string>
     <string name="to_main_activity">К главному меню</string>
     <string name="you_chose">Вы выбрали:</string>
@@ -61,6 +62,9 @@
     <string name="variable_value">Переменная:</string>
     <string name="action_settings">Настройки</string>
 
+    <string name="add_variant">Добавить вариант</string>
+    <string name="delete_anyway">Действительно удалить?</string>
+
     <string name="statistics_quantity">%1$d статистик</string>
     <string name="types_quantity">%1$d типов</string>
     <string name="note_quantity">%1$d записей</string>
@@ -79,11 +83,17 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
 
-
     <string name="edit_or_not">Внимание, все данные связанные с этой переменной будут удалены</string>
     <string name="continue_anyway">Продолжить</string>
 
     <string name="statistics">Статистики</string>
     <string name="types">Типы</string>
+    <string name="action_new">Создать новый</string>
+    <string name="not_saved_data_will_be_deleted">Все несохранённые данные будут удалены, продолжить?</string>
+    <string name="choose_type">Выберите тип</string>
+    <string name="created">%1$s создан</string>
+    <string name="updated">%1$s обновлён</string>
+
+    <string name="no_name">Введите имя</string>
 
 </resources>

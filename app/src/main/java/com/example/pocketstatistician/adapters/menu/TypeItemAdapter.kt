@@ -24,7 +24,7 @@ class TypeItemAdapter(val typeList:RealmResults<Type>): RecyclerView.Adapter<Typ
 
     override fun onBindViewHolder(holder: TypeViewHolder, position: Int) {
         holder.name.text = typeList[position]!!.name
-        holder.count.text = holder.name.context.getString(R.string.note_quantity, typeList[position]!!.variants.size)
+        holder.count.text = holder.name.context.getString(R.string.variant_quantity, typeList[position]!!.variants.size)
     }
 
     inner class TypeViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {

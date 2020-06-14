@@ -13,7 +13,7 @@ import com.example.pocketstatistician.fragments.menus.TypesFragment
 import io.realm.RealmList
 import io.realm.RealmResults
 
-class MenuPagerAdapter(fragmentActivity: FragmentActivity, val statistics: RealmResults<Statistic>, val types: RealmResults<Type>): FragmentStateAdapter(fragmentActivity) {
+class MenuPagerAdapter(fragmentActivity: FragmentActivity): FragmentStateAdapter(fragmentActivity) {
 
 
     override fun getItemCount(): Int {
@@ -21,8 +21,8 @@ class MenuPagerAdapter(fragmentActivity: FragmentActivity, val statistics: Realm
     }
 
     override fun createFragment(position: Int): Fragment {
-        return if (position == 0) StatisticsFragment(statistics)
-        else TypesFragment(types)
+        return if (position == 0) StatisticsFragment()
+        else TypesFragment()
     }
 
 }

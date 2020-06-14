@@ -14,11 +14,11 @@ import com.example.pocketstatistician.activities.TypeMenuActivity
 import com.example.pocketstatistician.adapters.menu.TypeItemAdapter
 import io.realm.RealmResults
 
-class TypesFragment(val types: RealmResults<Type>): Fragment() {
+class TypesFragment: Fragment() {
 
-    lateinit var label: TextView
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: TypeItemAdapter
+    lateinit var types: RealmResults<Type>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.menu_fragment_layout, container, false)
@@ -27,15 +27,14 @@ class TypesFragment(val types: RealmResults<Type>): Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        label = view!!.findViewById(R.id.label)
-
         recyclerView = view!!.findViewById(R.id.list_of_items)
+        types = (activity!!.application as Application).types
 
         adapter = TypeItemAdapter(types)
         adapter.onEntryClickListener = object : TypeItemAdapter.OnEntryClickListener {
             override fun onEntryClick(view: View, position: Int) {
                 val intent = Intent(activity, TypeMenuActivity::class.java)
-                intent.putExtra("type_number", position)
+                intent.putExtra("type_position", position)
                 startActivity(intent)
             }
         }
@@ -47,6 +46,5 @@ class TypesFragment(val types: RealmResults<Type>): Fragment() {
     override fun onResume() {
         super.onResume()
         adapter.notifyDataSetChanged()
-        label.text = getString(R.string.statistics_quantity, types.size)
     }
 }

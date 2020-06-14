@@ -2,7 +2,9 @@ package com.example.pocketstatistician.convenience
 
 import android.content.Context
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
@@ -19,6 +21,7 @@ class VariantChooserDialog(variants: RealmList<String>, header: String, context:
     private val alertDialog: AlertDialog
     private val searchBox: EditText
     private val questionBox: TextView
+    private val adapter: SearchAdapter
 
     init {
         val dialogBuilder = AlertDialog.Builder(context)
@@ -27,11 +30,14 @@ class VariantChooserDialog(variants: RealmList<String>, header: String, context:
         searchBox = view.findViewById(R.id.searchBox)
         questionBox = view.findViewById(R.id.question)
 
+        val searchButton = view.findViewById<ImageView>(R.id.searchIcon)
+        searchButton.setOnClickListener { onSearchButtonClick() }
+
         dialogBuilder.setView(view)
         alertDialog = dialogBuilder.create()
         alertDialog.window!!.setBackgroundDrawableResource(R.drawable.table_picker)
 
-        val adapter = SearchAdapter(variants)
+        adapter = SearchAdapter(variants)
         adapter.onEntryClickListener = object : SearchAdapter.OnEntryClickListener {
             override fun onEntryClick(view: View, position: Int) {
                 val selectedViewText = view.findViewById<TextView>(R.id.picker_item).text
@@ -44,11 +50,19 @@ class VariantChooserDialog(variants: RealmList<String>, header: String, context:
         recView.adapter = adapter
         recView.layoutManager = LinearLayoutManager(context)
 
-        searchBox.addTextChangedListener {
-            adapter.filterDataBy(searchBox.text.toString())
+        searchBox.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                onSearchButtonClick()
+            }
+            false
         }
 
         questionBox.text = header
+    }
+
+    fun onSearchButtonClick() {
+        adapter.filterDataBy(searchBox.text.toString())
+        searchBox.clearFocus()
     }
 
     fun show() {
