@@ -6,14 +6,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.R
+import com.example.pocketstatistician.Type
 import com.example.pocketstatistician.convenience.VariantChooserDialog
 import io.realm.RealmList
+import io.realm.RealmResults
 import java.util.*
 
-class SearchAdapter(private val defaultDataList: RealmList<String>)
-                          : RecyclerView.Adapter<SearchAdapter.SearchDialogViewHolder>(), VariantChooserDialog.Searcher {
+class TypeSearchAdapter(private val defaultDataList: RealmResults<Type>)
+                          : RecyclerView.Adapter<TypeSearchAdapter.SearchDialogViewHolder>(), VariantChooserDialog.Searcher {
 
-    private val dataList: RealmList<String> = RealmList()
+    private val dataList: RealmList<Type> = RealmList()
     var onEntryClickListener: OnEntryClickListener? = null
     init {
         dataList.addAll(defaultDataList)
@@ -21,7 +23,7 @@ class SearchAdapter(private val defaultDataList: RealmList<String>)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchDialogViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.picker_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.picker_item_type, parent, false)
         return SearchDialogViewHolder(view)
     }
 
@@ -30,7 +32,8 @@ class SearchAdapter(private val defaultDataList: RealmList<String>)
     }
 
     override fun onBindViewHolder(holder: SearchDialogViewHolder, position: Int) {
-        holder.name.text = dataList[position]
+        holder.name.text = dataList[position]!!.name
+        holder.type.text = dataList[position]!!.type
     }
 
     override fun filterDataBy(predicate: String) {
@@ -42,7 +45,7 @@ class SearchAdapter(private val defaultDataList: RealmList<String>)
         val pred = predicate.toLowerCase(Locale.getDefault())
 
         dataList.removeIf { p ->
-            !p.toLowerCase(Locale.getDefault()).startsWith(pred)
+            !p.name.toLowerCase(Locale.getDefault()).startsWith(pred)
         }
 
         notifyDataSetChanged()
@@ -59,6 +62,7 @@ class SearchAdapter(private val defaultDataList: RealmList<String>)
         }
 
         val name: TextView = view.findViewById(R.id.picker_item_name)
+        val type: TextView = view.findViewById(R.id.picker_item_type)
 
         override fun onClick(v: View?) {
             onEntryClickListener?.onEntryClick(v!!, layoutPosition)

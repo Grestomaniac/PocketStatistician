@@ -44,6 +44,11 @@ fun getEmptyNote(size: Int): Note {
     return emptyNote
 }
 
+fun convertToPx(dps: Int, context: Context): Int {
+    val scale: Float = context.resources.displayMetrics.density
+    return (dps * scale + 0.5f).toInt()
+}
+
 /*class NoVariablesAlertDialog(): DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context!!)

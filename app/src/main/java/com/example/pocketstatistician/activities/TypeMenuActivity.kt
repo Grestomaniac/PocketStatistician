@@ -24,7 +24,10 @@ class TypeMenuActivity: AppCompatActivity() {
 
         val app = application as Application
         type = app.types[typePosition]!!
+    }
 
+    override fun onResume() {
+        super.onResume()
         title = type.name
     }
 

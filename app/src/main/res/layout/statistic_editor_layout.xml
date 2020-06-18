@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/headline_straight">
 
@@ -83,11 +85,12 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <com.example.pocketstatistician.convenience.LimitedView
                 android:id="@+id/variant_placeholder"
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
+                app:maxHeight="300dp"
                 android:visibility="gone">
 
                 <FrameLayout
@@ -141,7 +144,51 @@
                         android:orientation="vertical"/>
 
                 </RelativeLayout>
-            </LinearLayout>
+            </com.example.pocketstatistician.convenience.LimitedView>
+
+            <com.example.pocketstatistician.convenience.LimitedView
+                android:id="@+id/question_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="6dp"
+                    android:weightSum="100"
+                    android:background="@drawable/input_head">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="50"
+                        android:text="@string/variable_name"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="50"
+                        android:text="@string/question"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_foot">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/list_of_questions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+                </RelativeLayout>
+            </com.example.pocketstatistician.convenience.LimitedView>
 
         </LinearLayout>
 

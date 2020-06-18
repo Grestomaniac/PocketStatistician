@@ -18,7 +18,6 @@ class Application: Application() {
         Realm.setDefaultConfiguration(config)
         types = loadTypes()
         statistics = loadStatistics()
-
     }
 
     private fun loadTypes(): RealmResults<Type> {

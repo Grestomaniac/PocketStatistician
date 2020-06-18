@@ -13,4 +13,12 @@
         android:padding="7dp"
         />
 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:id="@+id/picker_item_type"
+        android:padding="7dp"
+        />
+
 </LinearLayout>

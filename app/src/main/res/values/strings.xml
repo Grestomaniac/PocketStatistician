@@ -95,5 +95,6 @@
     <string name="updated">%1$s обновлён</string>
 
     <string name="no_name">Введите имя</string>
+    <string name="question">Вопрос</string>
 
 </resources>

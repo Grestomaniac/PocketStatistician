@@ -23,18 +23,21 @@ class NoteFragment(val variables: RealmList<Variable>, val note: Note): Fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         items = view!!.findViewById(R.id.items)
         val adapter = NoteAdapter(variables, note, context!!)
 
         items.adapter = adapter
         items.layoutManager = LinearLayoutManager(context)
+    }
 
+    override fun onStart() {
+        super.onStart()
+        items.adapter!!.notifyDataSetChanged()
     }
 
     fun getData(): Note {
         val data = RealmList<String>()
-        for (i in 0 until items.childCount) {
+        for (i in 0 until items.adapter!!.itemCount) {
             val holder = items.findViewHolderForAdapterPosition(i) as NoteAdapter.ViewHolder
             data.add(holder.getValue())
         }
@@ -42,7 +45,7 @@ class NoteFragment(val variables: RealmList<Variable>, val note: Note): Fragment
     }
 
     fun clearData() {
-        for (i in 0 until items.childCount) {
+        for (i in 0 until items.adapter!!.itemCount) {
             val holder = items.findViewHolderForAdapterPosition(i) as NoteAdapter.ViewHolder
             holder.clear()
         }

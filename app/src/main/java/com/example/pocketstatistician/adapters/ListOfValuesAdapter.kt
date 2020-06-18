@@ -6,13 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.R
 import com.example.pocketstatistician.activities.StatisticEditorActivity
 import com.example.pocketstatistician.convenience.YouChooseDialog
+import com.example.pocketstatistician.convenience.log
 
-class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivity.VariableData>, private val context: Context): RecyclerView.Adapter<ListOfValuesAdapter.ViewHolder>() {
+class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivity.VariableData>, private val context: AppCompatActivity): RecyclerView.Adapter<ListOfValuesAdapter.ViewHolder>() {
 
     var onEntryClickListener: OnEntryClickListener? = null
 
@@ -27,9 +30,10 @@ class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (variables[position].isDefault) {
+            log("variable at $position is default")
             holder.itemView.background = context.getDrawable(R.drawable.default_rounded)
 
-            holder.variableType.text = variables[position].type.name
+            holder.variableType.text = variables[position].type?.name
             holder.variableType.setOnClickListener {
                 val dialog = YouChooseDialog(context.getString(R.string.edit_or_not), context.getString(R.string.continue_anyway), context.getString(R.string.cancel))
                 dialog.dialogEventHandler = object : YouChooseDialog.DialogClickListener {
@@ -42,6 +46,24 @@ class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivi
                     override fun onNegativeButtonClick() {
                     }
                 }
+                dialog.show(context.supportFragmentManager, "For real?")
+            }
+
+            holder.deleteButton.setOnClickListener {
+                val dialog = YouChooseDialog(
+                    context.getString(R.string.edit_or_not),
+                    context.getString(R.string.continue_anyway),
+                    context.getString(R.string.cancel)
+                )
+                dialog.dialogEventHandler = object : YouChooseDialog.DialogClickListener {
+                    override fun onPositiveButtonClick() {
+                        onEntryClickListener?.onEntryClick(holder.deleteButton, position, true)
+                    }
+
+                    override fun onNegativeButtonClick() {
+                    }
+                }
+                dialog.show(context.supportFragmentManager, "For real?")
             }
 
             holder.variableName.setText(variables[position].name)
@@ -50,8 +72,8 @@ class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivi
         else {
             holder.itemView.background = context.getDrawable(R.drawable.item_name)
 
-            holder.variableType.text = if (variables[position].type.name.isBlank()) context.getString(R.string.nothing_is_chosen)
-            else variables[position].type.name
+            holder.variableType.text = if (variables[position].type == null) context.getString(R.string.nothing_is_chosen)
+            else variables[position].type!!.name
 
             holder.variableName.setText(variables[position].name)
         }
@@ -74,16 +96,18 @@ class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivi
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         val variableName = view.findViewById(R.id.variable_name) as EditText
         val variableType = view.findViewById(R.id.variable_type) as TextView
+        val deleteButton = view.findViewById(R.id.delete_button) as ImageButton
         init {
             variableType.setOnClickListener(this)
+            deleteButton.setOnClickListener(this)
         }
 
         override fun onClick(v: View?) {
-            onEntryClickListener?.onEntryClick(variableType, layoutPosition)
+            onEntryClickListener?.onEntryClick(v!!, layoutPosition, v is ImageButton)
         }
     }
 
     interface OnEntryClickListener {
-        fun onEntryClick(view: TextView, position: Int)
+        fun onEntryClick(view: View, position: Int, isItDeleteButton: Boolean)
     }
 }

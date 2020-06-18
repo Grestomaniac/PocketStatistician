@@ -1,5 +1,6 @@
 package com.example.pocketstatistician.activities
 
+import android.content.Context
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
@@ -52,7 +53,7 @@ class TableActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.table_layout)
 
-        val statPosition = intent.getIntExtra("statistic_number", -1)
+        val statPosition = intent.getIntExtra("statistic_position", -1)
         statistic = (application as Application).statistics[statPosition]!!
         variables = statistic.variables
         data.addAll(statistic.data)
@@ -117,7 +118,7 @@ class TableActivity: AppCompatActivity() {
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         variablePlaceholder.layoutManager = layoutManager
 
-        val noteAdapter = object : NotePlaceholderAdapter(data, convertToPx(layoutHeight)) {
+        val noteAdapter = object : NotePlaceholderAdapter(data, convertToPx(layoutHeight, this)) {
             override fun onAddNoteButtonClick() {
                 addNote()
             }
@@ -187,19 +188,14 @@ class TableActivity: AppCompatActivity() {
             }
         }
 
-        sizes.replaceAll { convertToPx(it * coefficient) }
-        sizes.add(convertToPx(layoutHeight))
+        sizes.replaceAll { convertToPx(it * coefficient, this) }
+        sizes.add(convertToPx(layoutHeight, this))
 
         var str = ""
         for (s in sizes) str += "$s "
         log(str)
 
         return sizes
-    }
-
-    fun convertToPx(dps: Int): Int {
-        val scale: Float = this.resources.displayMetrics.density
-        return (dps * scale + 0.5f).toInt()
     }
 
     fun disconnectListenersExceptOne(except: RecyclerView) {

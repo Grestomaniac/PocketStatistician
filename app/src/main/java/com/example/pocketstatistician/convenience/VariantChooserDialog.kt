@@ -11,22 +11,27 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.R
+import com.example.pocketstatistician.Type
 import com.example.pocketstatistician.Variable
+import com.example.pocketstatistician.activities.StatisticEditorActivity
 import com.example.pocketstatistician.adapters.SearchAdapter
+import com.example.pocketstatistician.adapters.TypeSearchAdapter
+import com.example.pocketstatistician.adapters.VariantAdapter
 import io.realm.RealmList
+import io.realm.RealmResults
 
-class VariantChooserDialog(variants: RealmList<String>, header: String, context: Context,
-                           private val picker: TextView){
+class VariantChooserDialog(variants: RealmList<String>? = null, header: String, context: Context,
+                           private val picker: TextView, types: RealmResults<Type>? = null, private val variable: StatisticEditorActivity.VariableData? = null){
 
     private val alertDialog: AlertDialog
     private val searchBox: EditText
     private val questionBox: TextView
-    private val adapter: SearchAdapter
+    private val recView: RecyclerView
 
     init {
         val dialogBuilder = AlertDialog.Builder(context)
         val view = View.inflate(context, R.layout.picker_dialog_layout, null)
-        val recView = view.findViewById<RecyclerView>(R.id.dialog_list)
+        recView = view.findViewById(R.id.dialog_list)
         searchBox = view.findViewById(R.id.searchBox)
         questionBox = view.findViewById(R.id.question)
 
@@ -37,17 +42,34 @@ class VariantChooserDialog(variants: RealmList<String>, header: String, context:
         alertDialog = dialogBuilder.create()
         alertDialog.window!!.setBackgroundDrawableResource(R.drawable.table_picker)
 
-        adapter = SearchAdapter(variants)
-        adapter.onEntryClickListener = object : SearchAdapter.OnEntryClickListener {
-            override fun onEntryClick(view: View, position: Int) {
-                val selectedViewText = view.findViewById<TextView>(R.id.picker_item).text
 
-                picker.text = selectedViewText
+        if (variants != null) {
+            val adapter = SearchAdapter(variants)
+            adapter.onEntryClickListener = object : SearchAdapter.OnEntryClickListener {
+                override fun onEntryClick(view: View, position: Int) {
+                    val selectedViewText = view.findViewById<TextView>(R.id.picker_item_name).text
 
-                alertDialog.dismiss()
+                    picker.text = selectedViewText
+
+                    alertDialog.dismiss()
+                }
             }
+            recView.adapter = adapter
         }
-        recView.adapter = adapter
+        else {
+            val adapter = TypeSearchAdapter(types!!)
+            adapter.onEntryClickListener = object : TypeSearchAdapter.OnEntryClickListener {
+                override fun onEntryClick(view: View, position: Int) {
+                    val selectedViewText = view.findViewById<TextView>(R.id.picker_item_name).text
+                    picker.text = selectedViewText
+                    variable!!.type = types[position]
+
+                    alertDialog.dismiss()
+                }
+            }
+            recView.adapter = adapter
+        }
+
         recView.layoutManager = LinearLayoutManager(context)
 
         searchBox.setOnEditorActionListener { v, actionId, event ->
@@ -61,11 +83,15 @@ class VariantChooserDialog(variants: RealmList<String>, header: String, context:
     }
 
     fun onSearchButtonClick() {
-        adapter.filterDataBy(searchBox.text.toString())
+        (recView.adapter as Searcher).filterDataBy(searchBox.text.toString())
         searchBox.clearFocus()
     }
 
     fun show() {
         alertDialog.show()
+    }
+
+    interface Searcher {
+        fun filterDataBy(predicate: String)
     }
 }

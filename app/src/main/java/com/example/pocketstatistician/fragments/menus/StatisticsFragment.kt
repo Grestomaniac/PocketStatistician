@@ -36,7 +36,7 @@ class StatisticsFragment: Fragment() {
         adapter.onEntryClickListener = object : StatisticItemAdapter.OnEntryClickListener {
             override fun onEntryClick(view: View, position: Int) {
                 val intent = Intent(activity, StatisticsMenuActivity::class.java)
-                intent.putExtra("statistic_number", position)
+                intent.putExtra("statistic_position", position)
                 startActivity(intent)
             }
         }

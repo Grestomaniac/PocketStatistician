@@ -111,7 +111,7 @@ class TypeEditorActivity: AppCompatActivity() {
         }
 
         if (variants.size < 2) {
-            show(this, "Нужны как минимум 2 переменные")
+            show(this, getString(R.string.not_enough_variants))
             return
         }
         if (!ifVariantsNotBlank()) return

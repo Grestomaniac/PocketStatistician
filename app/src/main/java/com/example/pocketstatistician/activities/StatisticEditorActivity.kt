@@ -46,7 +46,7 @@ class StatisticEditorActivity: AppCompatActivity() {
 
         statisticList = (application as Application).statistics
         typeList = (application as Application).types
-        statisticPosition = intent.getIntExtra("", -1)
+        statisticPosition = intent.getIntExtra("statistic_position", -1)
 
         if (statisticPosition != -1) {
             val statistic = statisticList[statisticPosition]
@@ -60,16 +60,23 @@ class StatisticEditorActivity: AppCompatActivity() {
             variablePlaceholder.visibility = View.VISIBLE
             quantityChooser.visibility = View.GONE
         }
-        val types = typeList.mapTo(RealmList(), { it.name })
 
         variablesAdapter = ListOfValuesAdapter(variables, this)
 
         variablesAdapter.onEntryClickListener = object: ListOfValuesAdapter.OnEntryClickListener {
-            override fun onEntryClick(view: TextView, position: Int) {
-                val variableName = variables[position].variable.name
+            override fun onEntryClick(view: View, position: Int, isItDeleteButton: Boolean) {
+                if (isItDeleteButton) {
+                    variables.removeAt(position)
+                    variablesAdapter.notifyItemRemoved(position)
+                    variablesAdapter.notifyItemRangeChanged(position, variablesAdapter.itemCount - position)
+                    return
+                }
+
+                val textView = view as TextView
+                val variableName = variables[position].name
                 val header = if (variableName.isBlank()) getString(R.string.choose_type) else variableName
-                VariantChooserDialog(types, header,this@StatisticEditorActivity, view).show()
-                variables[position].variable.type!!.name = view.text.toString()
+                VariantChooserDialog(null, header,this@StatisticEditorActivity, textView, typeList, variables[position]).show()
+                variables[position].type = typeList.find { it.name == textView.text.toString() }
             }
         }
 
@@ -128,7 +135,7 @@ class StatisticEditorActivity: AppCompatActivity() {
         }
 
         if (variables.size < 2) {
-            show(this, getString(R.string.not_enough_variants))
+            show(this, getString(R.string.not_enough_variables))
             return
         }
 
@@ -159,6 +166,10 @@ class StatisticEditorActivity: AppCompatActivity() {
         Realm.getDefaultInstance().executeTransaction { realm ->
             for (i in blackList) statistic.removeVariableDataAt(i)
             statistic.name = name
+            variables.forEach { it.variable.name = it.name
+                it.variable.type = it.type
+                it.variable.question = it.question}
+
             statistic.variables = variables.mapTo(RealmList(), { it.variable })
         }
         show(this, getString(R.string.updated, name))
@@ -167,6 +178,10 @@ class StatisticEditorActivity: AppCompatActivity() {
     private fun createStatistic(name: String) {
 
         Realm.getDefaultInstance().executeTransaction { realm ->
+            variables.forEach { it.variable.name = it.name
+            it.variable.type = it.type
+            it.variable.question = it.question}
+
             realm.copyToRealm(Statistic(name, variables.mapTo(RealmList(), { it.variable })))
         }
         show(this, getString(R.string.created, name))
@@ -175,11 +190,12 @@ class StatisticEditorActivity: AppCompatActivity() {
 
     private fun ifVariableDataIsCorrect(): Boolean {
         for (variable in variables) {
-            if (variable.variable.name.isBlank()) {
+            if (variable.name.isBlank()) {
                 show(this, getString(R.string.empty_string))
+                log("bad variable at ${variables.indexOf(variable)}")
                 return false
             }
-            if (variable.type.name == "") {
+            if (variable.type == null) {
                 show(this, getString(R.string.not_chosen))
                 return false
             }
@@ -209,9 +225,9 @@ class StatisticEditorActivity: AppCompatActivity() {
         variablesAdapter.notifyItemInserted(variablesAdapter.itemCount)
     }
 
-    class VariableData(var variable: Variable = Variable(), var isDefault: Boolean = false) {
+    class VariableData(var variable: Variable = Variable(type = null), var isDefault: Boolean = false) {
         var name: String = variable.name
-        var type: Type = variable.type!!
+        var type: Type? = variable.type
         var question: String = variable.question
     }
 

@@ -14,16 +14,19 @@ import io.realm.Realm
 class StatisticsMenuActivity: AppCompatActivity() {
 
     lateinit var statistic: Statistic
-    private var statPosition: Int = 0
+    private var statPosition: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.statistic_menu_layout)
-        statPosition = intent.getIntExtra("statistic_number", -1)
+        statPosition = intent.getIntExtra("statistic_position", -1)
 
         val app = application as Application
         statistic = app.statistics[statPosition]!!
+    }
 
+    override fun onResume() {
+        super.onResume()
         title = statistic.name
     }
 
@@ -38,12 +41,11 @@ class StatisticsMenuActivity: AppCompatActivity() {
     }
 
     fun onAnalyzeButtonClick(v: View) {
-        val newIntent = Intent(this, Statistic::class.java)
-        sendIntentToActivity(newIntent)
     }
 
     fun onEditButtonClick(v: View) {
-
+        val newIntent = Intent(this, StatisticEditorActivity::class.java)
+        sendIntentToActivity(newIntent)
     }
 
     fun onDeleteButtonClick(v: View) {
