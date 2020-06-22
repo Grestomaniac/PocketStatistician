@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.pocketstatistician.Application
-import com.example.pocketstatistician.R
-import com.example.pocketstatistician.Statistic
-import com.example.pocketstatistician.Type
+import com.example.pocketstatistician.*
 import com.example.pocketstatistician.convenience.YouChooseDialog
 import io.realm.Realm
 
@@ -41,7 +38,7 @@ class TypeMenuActivity: AppCompatActivity() {
         dialog.dialogEventHandler = object : YouChooseDialog.DialogClickListener {
             override fun onPositiveButtonClick() {
                 Realm.getDefaultInstance().executeTransaction { realm ->
-                    type.deleteFromRealm()
+                    type.delete()
                 }
                 finish()
             }

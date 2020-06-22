@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/headline_straight">
 
@@ -25,7 +27,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/type"
+                    android:text="@string/type_name"
                     android:textSize="20sp"
                     android:padding="7dp"
                     android:background="@drawable/input_head"
@@ -86,12 +88,14 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <com.example.pocketstatistician.convenience.LimitedView
                 android:id="@+id/variant_placeholder"
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone"
+                app:maxHeight="300dp"
+                android:background="@drawable/input_expandable_foot">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -120,8 +124,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/input_foot">
+                    android:layout_height="wrap_content">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/list_of_variants"
@@ -130,7 +133,7 @@
                         android:orientation="vertical"/>
 
                 </RelativeLayout>
-            </LinearLayout>
+            </com.example.pocketstatistician.convenience.LimitedView>
 
         </LinearLayout>
 

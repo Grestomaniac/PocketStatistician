@@ -9,7 +9,7 @@ import com.example.pocketstatistician.R
 import com.example.pocketstatistician.Type
 import io.realm.RealmResults
 
-class TypeItemAdapter(val typeList:RealmResults<Type>): RecyclerView.Adapter<TypeItemAdapter.TypeViewHolder>() {
+class TypeItemAdapter(private val typeList:RealmResults<Type>, private val defaultCount: Int): RecyclerView.Adapter<TypeItemAdapter.TypeViewHolder>() {
 
     var onEntryClickListener: OnEntryClickListener? = null
 
@@ -19,12 +19,12 @@ class TypeItemAdapter(val typeList:RealmResults<Type>): RecyclerView.Adapter<Typ
     }
 
     override fun getItemCount(): Int {
-        return typeList.size
+        return typeList.size - defaultCount
     }
 
     override fun onBindViewHolder(holder: TypeViewHolder, position: Int) {
-        holder.name.text = typeList[position]!!.name
-        holder.count.text = holder.name.context.getString(R.string.variant_quantity, typeList[position]!!.variants.size)
+        holder.name.text = typeList[position+defaultCount]!!.name
+        holder.count.text = holder.name.context.getString(R.string.variant_quantity, typeList[position+defaultCount]!!.variants.size)
     }
 
     inner class TypeViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {

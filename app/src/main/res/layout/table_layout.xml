@@ -20,7 +20,7 @@
                 android:layout_height="50dp"
                 android:background="@drawable/table_item" />
 
-            <com.example.pocketstatistician.convenience.CustomRecyclerView
+            <com.example.pocketstatistician.convenience.RecyclerViewWithStopListener
                 android:id="@+id/note_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.example.pocketstatistician.convenience.CustomRecyclerView
+            <com.example.pocketstatistician.convenience.RecyclerViewWithStopListener
                 android:id="@+id/variant_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"/>
@@ -63,30 +63,34 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_margin="5dp"
-                android:text="@string/variable_value"/>
+                android:text="@string/variable_value"
+                android:maxLines="1"/>
 
             <TextView
                 android:id="@+id/variable"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="5dp"/>
+                android:layout_weight="3"
+                android:layout_margin="5dp"
+                android:maxLines="1"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_margin="5dp"
-                android:text="@string/note"/>
+                android:text="@string/note"
+                android:maxLines="1"/>
 
             <TextView
                 android:id="@+id/note"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                android:maxLines="1" />
 
         </LinearLayout>
 

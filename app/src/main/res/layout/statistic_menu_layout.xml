@@ -30,11 +30,35 @@
         android:onClick="onAnalyzeButtonClick" />
 
     <Button
+        android:id="@+id/predict"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/rounded_basic_style"
+        android:text="@string/predicting"
+        android:onClick="onPredictButtonClick" />
+
+    <Button
+        android:id="@+id/graph"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/rounded_basic_style"
+        android:text="@string/graph"
+        android:onClick="onGraphButtonClick" />
+
+    <Button
         android:id="@+id/button_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/rounded_basic_style"
         android:text="@string/edit"
+        android:onClick="onEditButtonClick"/>
+
+    <Button
+        android:id="@+id/button_export"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/rounded_basic_style"
+        android:text="@string/export"
         android:onClick="onEditButtonClick"/>
 
     <Button

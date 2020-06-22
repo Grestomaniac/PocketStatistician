@@ -1,6 +1,5 @@
 package com.example.pocketstatistician.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import com.example.pocketstatistician.activities.StatisticEditorActivity
 import com.example.pocketstatistician.convenience.YouChooseDialog
 import com.example.pocketstatistician.convenience.log
 
-class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivity.VariableData>, private val context: AppCompatActivity): RecyclerView.Adapter<ListOfValuesAdapter.ViewHolder>() {
+class VariableAdapter(private val variables: ArrayList<StatisticEditorActivity.VariableData>, private val context: AppCompatActivity): RecyclerView.Adapter<VariableAdapter.ViewHolder>() {
 
     var onEntryClickListener: OnEntryClickListener? = null
 
@@ -29,7 +28,7 @@ class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivi
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (variables[position].isDefault) {
+        if (variables[position].editedState == 2) {
             log("variable at $position is default")
             holder.itemView.background = context.getDrawable(R.drawable.default_rounded)
 
@@ -39,7 +38,7 @@ class ListOfValuesAdapter(private val variables: ArrayList<StatisticEditorActivi
                 dialog.dialogEventHandler = object : YouChooseDialog.DialogClickListener {
                     override fun onPositiveButtonClick() {
                         holder.variableType.setOnClickListener(holder)
-                        variables[position].isDefault = false
+                        variables[position].editedState = 1
                         holder.itemView.background = context.getDrawable(R.drawable.item_name)
                     }
 

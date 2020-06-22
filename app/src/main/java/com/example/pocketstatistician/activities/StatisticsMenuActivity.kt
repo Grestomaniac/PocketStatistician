@@ -53,7 +53,7 @@ class StatisticsMenuActivity: AppCompatActivity() {
         dialog.dialogEventHandler = object : YouChooseDialog.DialogClickListener {
             override fun onPositiveButtonClick() {
                 Realm.getDefaultInstance().executeTransaction { realm ->
-                    statistic.deleteFromRealm()
+                    statistic.delete()
                 }
                 finish()
             }
@@ -69,4 +69,7 @@ class StatisticsMenuActivity: AppCompatActivity() {
         newIntent.putExtra("statistic_position", statPosition)
         startActivity(newIntent)
     }
+
+    fun onPredictButtonClick(view: View) {}
+    fun onGraphButtonClick(view: View) {}
 }

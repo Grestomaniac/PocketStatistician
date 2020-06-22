@@ -91,7 +91,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:maxHeight="300dp"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:background="@drawable/input_expandable_foot">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -134,8 +135,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/input_foot">
+                    android:layout_height="wrap_content">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/list_of_variants"

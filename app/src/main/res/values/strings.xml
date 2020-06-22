@@ -47,12 +47,23 @@
     <string name="add_new_variable">Добавить…</string>
     <string name="type">Тип</string>
     <string name="create_new_statistics">Новая статистика</string>
+
+    <!--StatisticMenuActivity-->
     <string name="create_new_type">Новый тип</string>
     <string name="add_note">Добавить запись</string>
     <string name="open_as_table">Открыть как таблицу</string>
     <string name="analyze">Проанализировать</string>
+    <string name="predicting">Меню предсказаний</string>
+    <string name="graph">Меню графиков</string>
     <string name="delete">Удалить</string>
     <string name="edit">Редактировать</string>
+    <string name="export">Экспортировать</string>
+
+
+    <!--ExportActivity-->
+    <string name="to_csv">В .csv</string>
+    <string name="to_json">В .json</string>
+
     <string name="explorer">Проводник</string>
     <string name="delete_note">Удалить запись</string>
     <string name="cancel">Отмена</string>
@@ -69,6 +80,7 @@
     <string name="types_quantity">%1$d типов</string>
     <string name="note_quantity">%1$d записей</string>
     <string name="variant_quantity">%1$d вариантов</string>
+    <string name="variable_quantity">%1$d переменных</string>
 
     <string name="statistic_menu">Меню статистики</string>
     <string name="add_note_header">%1$s с %2$d записями</string>
@@ -79,7 +91,7 @@
     <string name="table_label">Таблица</string>
 
     <string name="search_icon_description">Значок поиска</string>
-    <string name="do_you_want_to_add_note">Добавить переменную?</string>
+    <string name="do_you_want_to_add_note">Добавить новую запись?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
 
@@ -96,5 +108,14 @@
 
     <string name="no_name">Введите имя</string>
     <string name="question">Вопрос</string>
+    <string name="saved">Сохранено</string>
+
+    <!--Analyze-->
+    <string name="edit_manually">Настроить</string>
+    <string name="variables_count">Количество переменных:</string>
+    <string name="notes_count">Количество записей:</string>
+    <string name="empty_notes">Количество пустых записей:</string>
+    <string name="empty_variables">Количество пустых переменных:</string>
+    <string name="analyze_it">Проанализировать</string>
 
 </resources>

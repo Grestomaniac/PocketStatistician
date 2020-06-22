@@ -25,7 +25,8 @@ class StatisticItemAdapter(private val statisticList: RealmResults<Statistic>): 
 
     override fun onBindViewHolder(holder: StatisticViewHolder, position: Int) {
         holder.name.text = statisticList[position]!!.name
-        holder.count.text = holder.name.context.getString(R.string.note_quantity, statisticList[position]!!.data.size)
+        holder.noteCount.text = holder.name.context.getString(R.string.note_quantity, statisticList[position]!!.data.size)
+        holder.variableCount.text = holder.name.context.getString(R.string.variable_quantity, statisticList[position]!!.variables.size)
     }
 
     inner class StatisticViewHolder(view: View): RecyclerView.ViewHolder(view), View.OnClickListener {
@@ -33,7 +34,9 @@ class StatisticItemAdapter(private val statisticList: RealmResults<Statistic>): 
             view.setOnClickListener(this)
         }
         val name: TextView = view.findViewById(R.id.name)
-        val count: TextView = view.findViewById(R.id.item_count)
+        val noteCount: TextView = view.findViewById(R.id.item_count)
+        val variableCount: TextView = view.findViewById(R.id.variable_count)
+        val date: TextView = view.findViewById(R.id.last_edited_date)
 
         override fun onClick(v: View?) {
             onEntryClickListener?.onEntryClick(v!!, layoutPosition)

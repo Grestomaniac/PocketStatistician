@@ -34,4 +34,9 @@
         <item name="android:background">@drawable/rounded_corner</item>
     </style>
 
+    <style name="text_view_style">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">7dp</item>
+    </style>
+
 </resources>

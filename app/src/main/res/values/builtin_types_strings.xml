@@ -2,4 +2,6 @@
     <string name="integer_type">Целое число</string>
     <string name="double_type">Вещественное число</string>
     <string name="date_type">Дата</string>
+    <string name="range_type">Ранжированный тип</string>
+    <string name="yes_not_type">Бинарный да/нет</string>
 </resources>

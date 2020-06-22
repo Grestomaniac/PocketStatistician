@@ -19,14 +19,16 @@ import com.example.pocketstatistician.adapters.TypeSearchAdapter
 import com.example.pocketstatistician.adapters.VariantAdapter
 import io.realm.RealmList
 import io.realm.RealmResults
+import java.text.ParsePosition
 
 class VariantChooserDialog(variants: RealmList<String>? = null, header: String, context: Context,
-                           private val picker: TextView, types: RealmResults<Type>? = null, private val variable: StatisticEditorActivity.VariableData? = null){
+                           types: RealmResults<Type>? = null){
 
     private val alertDialog: AlertDialog
     private val searchBox: EditText
     private val questionBox: TextView
     private val recView: RecyclerView
+    var onVariantChosenListener: OnVariantChosenListener? = null
 
     init {
         val dialogBuilder = AlertDialog.Builder(context)
@@ -47,9 +49,7 @@ class VariantChooserDialog(variants: RealmList<String>? = null, header: String, 
             val adapter = SearchAdapter(variants)
             adapter.onEntryClickListener = object : SearchAdapter.OnEntryClickListener {
                 override fun onEntryClick(view: View, position: Int) {
-                    val selectedViewText = view.findViewById<TextView>(R.id.picker_item_name).text
-
-                    picker.text = selectedViewText
+                    onVariantChosenListener?.onVariantChosen(position)
 
                     alertDialog.dismiss()
                 }
@@ -60,9 +60,7 @@ class VariantChooserDialog(variants: RealmList<String>? = null, header: String, 
             val adapter = TypeSearchAdapter(types!!)
             adapter.onEntryClickListener = object : TypeSearchAdapter.OnEntryClickListener {
                 override fun onEntryClick(view: View, position: Int) {
-                    val selectedViewText = view.findViewById<TextView>(R.id.picker_item_name).text
-                    picker.text = selectedViewText
-                    variable!!.type = types[position]
+                    onVariantChosenListener?.onVariantChosen(position)
 
                     alertDialog.dismiss()
                 }
@@ -93,5 +91,9 @@ class VariantChooserDialog(variants: RealmList<String>? = null, header: String, 
 
     interface Searcher {
         fun filterDataBy(predicate: String)
+    }
+
+    interface OnVariantChosenListener {
+        fun onVariantChosen(itemPos: Int)
     }
 }

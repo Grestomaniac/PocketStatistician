@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/headline_straight">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_expandable_foot"
+                android:padding="7dp"
+                android:layout_marginHorizontal="7dp"
+                android:layout_marginTop="7dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/variables_count"
+                    />
+
+                <TextView
+                    android:id="@+id/variables_count"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    style="@style/text_view_style"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_expandable_foot"
+                android:padding="7dp"
+                android:layout_marginHorizontal="7dp"
+                android:layout_marginTop="7dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notes_count"
+                    />
+
+                <TextView
+                    android:id="@+id/notes_count"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    style="@style/text_view_style"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_expandable_foot"
+                android:padding="7dp"
+                android:layout_marginHorizontal="7dp"
+                android:layout_marginTop="7dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/empty_notes"
+                    />
+
+                <TextView
+                    android:id="@+id/empty_notes"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    style="@style/text_view_style"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_expandable_foot"
+                android:padding="7dp"
+                android:layout_marginHorizontal="7dp"
+                android:layout_marginTop="7dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/empty_variables"
+                    />
+
+                <TextView
+                    android:id="@+id/empty_variables"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    style="@style/text_view_style"
+                    />
+
+            </LinearLayout>
+
+            <com.example.pocketstatistician.convenience.LimitedView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:maxHeight="300dp"
+                android:background="@drawable/input_expandable_foot"
+                android:padding="7dp"
+                android:layout_marginHorizontal="7dp"
+                android:layout_marginTop="7dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </com.example.pocketstatistician.convenience.LimitedView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onManualEditButtonClick"
+            android:text="@string/analyze_it"
+            style="@style/rounded_basic_style"/>
+
+    </LinearLayout>
+
+</FrameLayout>

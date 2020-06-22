@@ -47,5 +47,13 @@
 
         </activity>
 
+        <activity android:name=".activities.ExportActivity">
+
+        </activity>
+
+        <activity android:name=".activities.AnalyzeActivity">
+
+        </activity>
+
     </application>
 </manifest>

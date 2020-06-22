@@ -1,9 +1,11 @@
 package com.example.pocketstatistician.activities
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -22,8 +24,8 @@ import io.realm.RealmList
 
 class TableActivity: AppCompatActivity() {
 
-    lateinit var variablePlaceholder: CustomRecyclerView
-    lateinit var notePlaceholder: CustomRecyclerView
+    lateinit var variablePlaceholder: RecyclerViewWithStopListener
+    lateinit var notePlaceholder: RecyclerViewWithStopListener
     lateinit var dataPlaceholder: RecyclerView
     lateinit var pickerEditText: EditText
     lateinit var pickerTextView: TextView
@@ -46,7 +48,7 @@ class TableActivity: AppCompatActivity() {
     val data: RealmList<Note> = RealmList()
     lateinit var arrayOfSizes: ArrayList<Int>
     var layoutHeight = 50
-    var coefficient: Int = 20
+    var coefficient: Int = 18
     var recViewPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -133,7 +135,7 @@ class TableActivity: AppCompatActivity() {
 
         gestureView.setOnTouchListener(touchListener)
 
-        val stoppedListener = object: CustomRecyclerView.OnScrollStoppedListener {
+        val stoppedListener = object: RecyclerViewWithStopListener.OnScrollStoppedListener {
             override fun onScrollStopped() {
                 selectViewOnScrollStopped()
             }
@@ -168,7 +170,7 @@ class TableActivity: AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.table_menu, menu)
         return true
     }
 
@@ -179,12 +181,14 @@ class TableActivity: AppCompatActivity() {
 
     private fun getMaxSizes(): ArrayList<Int> {
         val sizes = variables.mapTo(ArrayList(), { it.name.length })
-        val columnCount = sizes.size
 
-        for (i in 0 until data.size) {
-            for (j in 0 until columnCount) {
-                val l = data[i]!!.note[j]!!.length
-                if (l > sizes[j]) sizes[j] = l
+        for (i in 0 until variables.size) {
+            val variableType = variables[i]!!.type!!
+            if (variableType.type == "classified") {
+                val variants = variableType.variants
+                for (j in 0 until variants.size) {
+                    if (sizes[i] < variants[j]!!.length) sizes[i] = variants[j]!!.length
+                }
             }
         }
 
@@ -378,15 +382,25 @@ class TableActivity: AppCompatActivity() {
     }
 
     fun showVariantPickerDialog() {
-        val dialog = VariantChooserDialog(variables[selectedView.variablePosition]!!.type!!.variants, variables[selectedView.variablePosition]!!.name,this, pickerTextView)
+        val selectedVariable = variables[selectedView.variablePosition]!!
+        val variants = selectedVariable.type!!.variants
+
+        val dialog = VariantChooserDialog(variants, selectedVariable.name,this)
+        dialog.onVariantChosenListener = object : VariantChooserDialog.OnVariantChosenListener {
+            override fun onVariantChosen(itemPos: Int) {
+                navigatorTextField.setText(variants[itemPos]!!)
+                onNavigatorButtonClick(null)
+            }
+        }
         dialog.show()
     }
 
-    fun onNavigatorButtonClick(v: View) {
+    fun onNavigatorButtonClick(v: View?) {
         if (selectedView.view == null) return
 
         if (selectedView.view!!.text != navigatorTextField.getText()) {
             selectedView.view!!.text = navigatorTextField.getText()
+            log("its changing")
             addChange()
         }
 
@@ -395,15 +409,12 @@ class TableActivity: AppCompatActivity() {
 
     fun selectNext() {
         if (selectedView.variablePosition < variables.size - 1) {
-            log("selecting next variable")
             selectViewAtPosition(selectedView.notePosition, selectedView.variablePosition + 1)
         }
         else if (selectedView.notePosition < data.size - 1) {
-            log("selecting view at next note")
             selectViewAtPosition(selectedView.notePosition + 1, 0)
         }
         else {
-            log("making new note")
             addNote()
         }
     }
@@ -460,6 +471,7 @@ class TableActivity: AppCompatActivity() {
             actions.clear()
             changes.clear()
         }
+        show(this, getString(R.string.saved))
     }
 
     fun onCancel() {
@@ -468,7 +480,16 @@ class TableActivity: AppCompatActivity() {
 
     class SelectedView(var view: TextView? = null, var variablePosition: Int = 0, var notePosition: Int = 0)
 
-    class NavigatorTextField(private val textView: TextView, private val editText: EditText) {
+    inner class NavigatorTextField(private val textView: TextView, private val editText: EditText) {
+        init {
+            editText.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    onNavigatorButtonClick(null)
+                }
+                false
+            }
+        }
+
         fun getText(): CharSequence {
             return if (textView.isVisible) textView.text
             else editText.text
@@ -513,5 +534,21 @@ class TableActivity: AppCompatActivity() {
 
     class DataChange(var buffer: String, val notePosition: Int, val varPosition: Int)
     class Action(val actionType: String, val notePosition: Int)
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_settings -> {
+            true
+        }
+
+        R.id.action_save -> {
+            currentFocus?.clearFocus()
+            onSave()
+            true
+        }
+
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
 
 }

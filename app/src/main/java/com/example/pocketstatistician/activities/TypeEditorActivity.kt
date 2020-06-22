@@ -48,6 +48,7 @@ class TypeEditorActivity: AppCompatActivity() {
         if (typePosition != -1) {
             val type = typeList[typePosition]
             typeName.setText(type!!.name)
+            title = type.name
 
             val oldVariants = type.variants
             variantsCount.setText(oldVariants.size.toString())

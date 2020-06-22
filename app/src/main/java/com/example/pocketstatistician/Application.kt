@@ -10,6 +10,7 @@ class Application: Application() {
 
     lateinit var types: RealmResults<Type>
     lateinit var statistics: RealmResults<Statistic>
+    var defaultTypesCount: Int = 5
 
     override fun onCreate() {
         super.onCreate()
@@ -38,6 +39,16 @@ class Application: Application() {
         return statistics!!
     }
 
+    private fun addDefaultTypes() {
+        Realm.getDefaultInstance().executeTransaction {
+            it.copyToRealm(Type(getString(R.string.integer_type), "integer"))
+            it.copyToRealm(Type(getString(R.string.double_type), "double"))
+            it.copyToRealm(Type(getString(R.string.range_type), "range"))
+            it.copyToRealm(Type(getString(R.string.date_type), "date_type"))
+            it.copyToRealm(Type(getString(R.string.yes_not_type), "classified", RealmList(getString(R.string.yes), getString(R.string.no))))
+        }
+    }
+
     private fun checkFirstRun() {
 
         val PREF_FILE_NAME = "my_file"
@@ -56,11 +67,7 @@ class Application: Application() {
 
         //App is running for the first time
         if (savedPrefVersion == DOES_NOT_EXIST) {
-            Realm.getDefaultInstance().executeTransaction { realm ->
-                realm.copyToRealm(Type(getString(R.string.integer_type), "int"))
-                realm.copyToRealm(Type(getString(R.string.double_type), "double"))
-                realm.copyToRealm(Type(getString(R.string.date_type), "date"))
-            }
+            addDefaultTypes()
             pref.edit().putInt(PREF_VERSION_CODE, currentVersionCode).apply()
         }
 

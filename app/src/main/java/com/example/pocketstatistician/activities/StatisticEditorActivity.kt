@@ -13,12 +13,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pocketstatistician.*
-import com.example.pocketstatistician.adapters.ListOfValuesAdapter
+import com.example.pocketstatistician.adapters.VariableAdapter
 import com.example.pocketstatistician.convenience.*
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmResults
-import kotlin.math.abs
 
 class StatisticEditorActivity: AppCompatActivity() {
 
@@ -26,7 +25,7 @@ class StatisticEditorActivity: AppCompatActivity() {
     private lateinit var statisticList: RealmResults<Statistic>
     private lateinit var typeList: RealmResults<Type>
     lateinit var listOfVariables: RecyclerView
-    lateinit var variablesAdapter: ListOfValuesAdapter
+    lateinit var variablesAdapter: VariableAdapter
     lateinit var statisticName: EditText
     lateinit var variablePlaceholder: LinearLayout
     lateinit var quantityChooser: LinearLayout
@@ -52,18 +51,19 @@ class StatisticEditorActivity: AppCompatActivity() {
             val statistic = statisticList[statisticPosition]
             statisticName.setText(statistic!!.name)
             variablesCount.setText(statistic.variables.size.toString())
+            title = statistic.name
 
             for (i in 0 until statistic.variables.size) {
                 val variable = statistic.variables[i]!!
-                variables.add(VariableData(variable, true))
+                variables.add(VariableData(variable, 2))
             }
             variablePlaceholder.visibility = View.VISIBLE
             quantityChooser.visibility = View.GONE
         }
 
-        variablesAdapter = ListOfValuesAdapter(variables, this)
+        variablesAdapter = VariableAdapter(variables, this)
 
-        variablesAdapter.onEntryClickListener = object: ListOfValuesAdapter.OnEntryClickListener {
+        variablesAdapter.onEntryClickListener = object: VariableAdapter.OnEntryClickListener {
             override fun onEntryClick(view: View, position: Int, isItDeleteButton: Boolean) {
                 if (isItDeleteButton) {
                     variables.removeAt(position)
@@ -75,24 +75,20 @@ class StatisticEditorActivity: AppCompatActivity() {
                 val textView = view as TextView
                 val variableName = variables[position].name
                 val header = if (variableName.isBlank()) getString(R.string.choose_type) else variableName
-                VariantChooserDialog(null, header,this@StatisticEditorActivity, textView, typeList, variables[position]).show()
-                variables[position].type = typeList.find { it.name == textView.text.toString() }
+                val dialog = VariantChooserDialog(null, header,this@StatisticEditorActivity, typeList)
+                dialog.onVariantChosenListener = object: VariantChooserDialog.OnVariantChosenListener {
+                    override fun onVariantChosen(itemPos: Int) {
+                        val selectedType = typeList[itemPos]!!
+                        textView.text = selectedType.name
+                        variables[position].type = selectedType
+                    }
+                }
+                dialog.show()
             }
         }
 
         listOfVariables.adapter = variablesAdapter
         listOfVariables.layoutManager = LinearLayoutManager(this)
-
-        listOfVariables.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
-            override fun onChildViewDetachedFromWindow(view: View) {
-
-            }
-
-            override fun onChildViewAttachedToWindow(view: View) {
-
-            }
-
-        })
 
         variablesCount.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -146,7 +142,7 @@ class StatisticEditorActivity: AppCompatActivity() {
         else createStatistic(name)
 
         title = name
-        variables.forEach { variant -> variant.isDefault = true }
+        variables.forEach { variant -> variant.editedState = 2 }
         variablesAdapter.notifyDataSetChanged()
     }
 
@@ -157,20 +153,27 @@ class StatisticEditorActivity: AppCompatActivity() {
 
         for (i in 0 until variables.size) {
             val variable = variables[i]
-            if (variable.isDefault) {
+            if (variable.editedState == 2) {
                 val defaultPos = statOldVars.indexOf(variable.variable)
                 if (defaultPos != -1) blackList.remove(defaultPos)
             }
         }
 
         Realm.getDefaultInstance().executeTransaction { realm ->
-            for (i in blackList) statistic.removeVariableDataAt(i)
+            for (i in blackList) statistic.variables[i]!!.remove()
             statistic.name = name
-            variables.forEach { it.variable.name = it.name
-                it.variable.type = it.type
-                it.variable.question = it.question}
+            for (i in 0 until variables.size) {
+                val oldVariable = variables[i].variable
+                val newVariable = variables[i]
+                oldVariable.name = newVariable.name
+                oldVariable.type = newVariable.type
+                oldVariable.question = newVariable.question
+                oldVariable.positionInStatistic = i
+                if (newVariable.editedState == 1) oldVariable.clearDataFromStatistic()
+            }
 
-            statistic.variables = variables.mapTo(RealmList(), { it.variable })
+            statistic.variables.clear()
+            statistic.variables.addAll(variables.mapTo(RealmList(), { it.variable }))
         }
         show(this, getString(R.string.updated, name))
     }
@@ -178,9 +181,15 @@ class StatisticEditorActivity: AppCompatActivity() {
     private fun createStatistic(name: String) {
 
         Realm.getDefaultInstance().executeTransaction { realm ->
-            variables.forEach { it.variable.name = it.name
-            it.variable.type = it.type
-            it.variable.question = it.question}
+            for (i in 0 until variables.size) {
+                val oldVariable = variables[i].variable
+                val newVariable = variables[i]
+                oldVariable.name = newVariable.name
+                oldVariable.type = newVariable.type
+                oldVariable.question = newVariable.question
+                oldVariable.positionInStatistic = i
+                oldVariable.type!!.usedVariables.add(oldVariable)
+            }
 
             realm.copyToRealm(Statistic(name, variables.mapTo(RealmList(), { it.variable })))
         }
@@ -225,7 +234,7 @@ class StatisticEditorActivity: AppCompatActivity() {
         variablesAdapter.notifyItemInserted(variablesAdapter.itemCount)
     }
 
-    class VariableData(var variable: Variable = Variable(type = null), var isDefault: Boolean = false) {
+    class VariableData(var variable: Variable = Variable(type = null), var editedState: Int = 0) { // 0 - new, 1 - edited old, 2 - non type-edited old
         var name: String = variable.name
         var type: Type? = variable.type
         var question: String = variable.question
